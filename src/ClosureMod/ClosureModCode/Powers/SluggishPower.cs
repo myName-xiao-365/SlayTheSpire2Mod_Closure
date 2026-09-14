@@ -49,6 +49,11 @@ public sealed class SluggishPower : ModPowerTemplate
             return 1m;
         }
 
+        if (Owner.Powers.OfType<MerchantFormPower>().Any(power => power.Amount > 0))
+        {
+            return 1m;
+        }
+
         int stunThreshold = GetStunThreshold();
         int stacks = Math.Clamp(Amount, 0, stunThreshold - 1);
         return Math.Max(0m, 1m - stacks * DamageLossPerStack);
