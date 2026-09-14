@@ -1,0 +1,22 @@
+{
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.aromaPrinciple": "[sine][blue]A stocked workshop is just another kind of battlefield.[/blue][/sine]",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.banter.alive.endTurnPing": "Diagnostics complete.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.banter.dead.endTurnPing": "Workshop closed for repairs.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.cardsModifierDescription": "Closure cards can now appear in rewards and shops.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.cardsModifierTitle": "Closure Cards",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.defeatMessage": "The prototype needs another rebuild.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.description": "An engineer-merchant who turns tools, timing, and spare parts into combat momentum.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.eventDeathPrevention": "Closure patches the system back together.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.flavor": "A brilliant workshop keeper with a suspiciously well-stocked emergency drawer.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.goldMonologue": "Seed capital. Very important technical term.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.possessiveAdjective": "her",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.pronounObject": "her",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.pronounPossessive": "hers",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.pronounSubject": "she",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.selectMessage": "Closure is ready to open shop.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.title": "可露希尔",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.titleObject": "可露希尔",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.unlockText": "Complete a run as [pink]{Prerequisite}[/pink] to unlock this character.",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.victoryMessage": "All systems profitable."
+}
+

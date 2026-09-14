@@ -1,0 +1,22 @@
+{
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.aromaPrinciple": "[sine][blue]库存充足的工坊，也可以是另一种战场。[/blue][/sine]",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.banter.alive.endTurnPing": "诊断完成。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.banter.dead.endTurnPing": "工坊暂停营业，正在维修。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.cardsModifierDescription": "可露希尔的卡牌现在会出现在奖励和商店中。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.cardsModifierTitle": "可露希尔卡牌",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.defeatMessage": "这个原型机还需要重做一次。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.description": "将工具、时机和备用零件转化为战斗节奏的工程师商人。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.eventDeathPrevention": "可露希尔把系统重新修了回来。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.flavor": "一位聪明得过分的工坊老板，总能从抽屉里摸出正好能用的东西。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.goldMonologue": "启动资金。非常重要的技术术语。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.possessiveAdjective": "她的",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.pronounObject": "她",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.pronounPossessive": "她的",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.pronounSubject": "她",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.selectMessage": "可露希尔准备营业。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.title": "可露希尔",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.titleObject": "可露希尔",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.unlockText": "用[pink]{Prerequisite}[/pink]进行一局游戏来解锁这个角色。",
+  "CLOSURE_MOD_CHARACTER_CLOSURE_MOD_CHARACTER.victoryMessage": "系统正常，收益可观。"
+}
+

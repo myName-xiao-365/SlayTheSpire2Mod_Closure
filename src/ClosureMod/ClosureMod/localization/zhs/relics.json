@@ -1,0 +1,12 @@
+{
+  "CLOSURE_MOD_RELIC_CLOSURE_MOD_RELIC.title": "极限调度",
+  "CLOSURE_MOD_RELIC_CLOSURE_MOD_RELIC.description": "你的能量可以降低至 [blue]-{EnergyDebt}[/blue]。回合结束时，每有 [blue]1[/blue] 点负能量，获得 [blue]1[/blue] 层债务。",
+  "CLOSURE_MOD_RELIC_CLOSURE_MOD_RELIC.flavor": "一半是营业库存，一半是战场保险。",
+  "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.title": "额外调度",
+  "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.description": "你的能量可以降低至 [blue]-{EnergyDebt}[/blue]。回合结束时，每有 [blue]1[/blue] 点负能量，获得 [blue]1[/blue] 层债务，然后减少 [blue]{DebtReduction}[/blue] 层。",
+  "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.flavor": "账本底线再次下沉，但至少这次有人负责擦掉一行赤字。",
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.title": "奇怪的按钮",
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.description": "获得时，将一张 平局？ 加入牌组。",
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.flavor": "显然不该按。也显然会有人按。"
+}
+

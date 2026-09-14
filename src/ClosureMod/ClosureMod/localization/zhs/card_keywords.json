@@ -1,0 +1,6 @@
+{
+  "CLOSURE_MOD_KEYWORD_SLUGGISH.title": "迟钝",
+  "CLOSURE_MOD_KEYWORD_SLUGGISH.description": "每层使造成的攻击伤害降低 5%。敌人每获得 1 层迟钝，随机减少自身 1 层增益。达到触发阈值时，失去对应层数并眩晕。",
+  "CLOSURE_MOD_KEYWORD_DEBT.title": "债务",
+  "CLOSURE_MOD_KEYWORD_DEBT.description": "回合结束时，每有 1 点负费用，获得 1 层债务。下回合开始时，失去等量费用。"
+}

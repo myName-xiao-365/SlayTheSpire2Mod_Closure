@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://ClosureMod/images/characters/ClosureMod_full_art.png" id="1_character"]
+[ext_resource type="Texture2D" path="res://ClosureMod/images/summons/AttackModule.png" id="2_attack_module"]
+[ext_resource type="Texture2D" path="res://ClosureMod/images/summons/DefenseModule.png" id="3_defense_module"]
+[ext_resource type="Texture2D" path="res://ClosureMod/images/summons/SupportModule.png" id="4_support_module"]
+
+[node name="ClosureModCharacter" type="Node2D"]
+
+[node name="Visuals" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -92)
+scale = Vector2(0.18, 0.18)
+texture = ExtResource("1_character")
+
+[node name="AttackModule" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+position = Vector2(-92, -202)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("2_attack_module")
+
+[node name="DefenseModule" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+position = Vector2(0, -232)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("3_defense_module")
+
+[node name="SupportModule" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+position = Vector2(92, -202)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("4_support_module")
+
+[node name="Bounds" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = -82.0
+offset_top = -214.0
+offset_right = 82.0
+offset_bottom = 14.0
+
+[node name="IntentPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(24, -224)
+
+[node name="CenterPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -96)
+
+[node name="TalkPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -184)
+

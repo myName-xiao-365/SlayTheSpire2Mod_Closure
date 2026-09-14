@@ -1,0 +1,18 @@
+{
+  "id": "ClosureMod",
+  "name": "可露希尔",
+  "pck_name": "ClosureMod",
+  "author": "火山温泉浴",
+  "description": "Adds Closure as a playable engineering-focused character.",
+  "version": "0.0.0",
+  "has_pck": true,
+  "has_dll": true,
+  "affects_gameplay": true,
+  "min_game_version": "0.106.0",
+  "dependencies": [
+    {
+      "id": "STS2-RitsuLib",
+      "version": "0.5.20"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "CLOSURE_MOD_RELIC_CLOSURE_MOD_RELIC.title": "Extreme Dispatch",
+  "CLOSURE_MOD_RELIC_CLOSURE_MOD_RELIC.description": "Your energy can drop as low as [blue]-{EnergyDebt}[/blue]. At turn end, gain [blue]1[/blue] Debt for each negative energy.",
+  "CLOSURE_MOD_RELIC_CLOSURE_MOD_RELIC.flavor": "Half business inventory, half battlefield insurance.",
+  "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.title": "Extra Dispatch",
+  "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.description": "Your energy can drop as low as [blue]-{EnergyDebt}[/blue]. At turn end, gain [blue]1[/blue] Debt for each negative energy, then reduce it by [blue]{DebtReduction}[/blue].",
+  "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.flavor": "The ledger sinks a little deeper, but at least someone is erasing one line of red.",
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.title": "Strange Button",
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.description": "Upon pickup, add a Draw? to your deck.",
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.flavor": "Clearly not meant to be pressed. Clearly going to be pressed."
+}
+
