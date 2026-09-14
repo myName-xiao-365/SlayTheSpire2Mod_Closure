@@ -72,6 +72,9 @@
   "CLOSURE_MOD_CARD_OVERTIME.title": "加班",
   "CLOSURE_MOD_CARD_OVERTIME.description": "获得 {EnergyGain:diff()} [img]res://ClosureMod/images/characters/energy_text.png[/img]。\n给予自身 {Sluggish:diff()} 层迟钝。",
   "CLOSURE_MOD_CARD_OVERTIME.smartDescription": "获得 {EnergyGain:diff()} [img]res://ClosureMod/images/characters/energy_text.png[/img]。\n给予自身 {Sluggish:diff()} 层迟钝。",
+  "CLOSURE_MOD_CARD_TIMELY_FEEDBACK.title": "及时反馈",
+  "CLOSURE_MOD_CARD_TIMELY_FEEDBACK.description": "每次对敌人造成一次伤害，获得等同于敌人迟钝层数的格挡。",
+  "CLOSURE_MOD_CARD_TIMELY_FEEDBACK.smartDescription": "每次对敌人造成一次伤害，获得等同于敌人迟钝层数的格挡。",
   "CLOSURE_MOD_CARD_STATUS_RESET.title": "状态复位",
   "CLOSURE_MOD_CARD_STATUS_RESET.description": "抽 {Draw:diff()} 张牌。\n移除自身 {SluggishRemove:diff()} 层迟钝。",
   "CLOSURE_MOD_CARD_STATUS_RESET.smartDescription": "抽 {Draw:diff()} 张牌。\n移除自身 {SluggishRemove:diff()} 层迟钝。",
@@ -138,4 +141,3 @@
   "CLOSURE_MOD_CARD_ALL_OUT_ATTACK.description": "攻击模块召唤 {AttackModuleHp:diff()}。\n防御模块召唤 {DefenseModuleHp:diff()}。\n后援模块召唤 {SupportModuleHp:diff()}。",
   "CLOSURE_MOD_CARD_ALL_OUT_ATTACK.smartDescription": "攻击模块召唤 {AttackModuleHp:diff()}。\n防御模块召唤 {DefenseModuleHp:diff()}。\n后援模块召唤 {SupportModuleHp:diff()}。"
 }
-

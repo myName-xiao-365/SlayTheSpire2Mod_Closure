@@ -72,6 +72,9 @@
   "CLOSURE_MOD_CARD_OVERTIME.title": "Overtime",
   "CLOSURE_MOD_CARD_OVERTIME.description": "Gain {EnergyGain:diff()} [img]res://ClosureMod/images/characters/energy_text.png[/img]. Apply {Sluggish:diff()} Sluggish to yourself.",
   "CLOSURE_MOD_CARD_OVERTIME.smartDescription": "Gain {EnergyGain:diff()} [img]res://ClosureMod/images/characters/energy_text.png[/img]. Apply {Sluggish:diff()} Sluggish to yourself.",
+  "CLOSURE_MOD_CARD_TIMELY_FEEDBACK.title": "Timely Feedback",
+  "CLOSURE_MOD_CARD_TIMELY_FEEDBACK.description": "Whenever you deal damage to an enemy, gain Block equal to that enemy's Sluggish.",
+  "CLOSURE_MOD_CARD_TIMELY_FEEDBACK.smartDescription": "Whenever you deal damage to an enemy, gain Block equal to that enemy's Sluggish.",
   "CLOSURE_MOD_CARD_STATUS_RESET.title": "Status Reset",
   "CLOSURE_MOD_CARD_STATUS_RESET.description": "Draw {Draw:diff()} cards. Remove {SluggishRemove:diff()} Sluggish from yourself.",
   "CLOSURE_MOD_CARD_STATUS_RESET.smartDescription": "Draw {Draw:diff()} cards. Remove {SluggishRemove:diff()} Sluggish from yourself.",
@@ -138,4 +141,3 @@
   "CLOSURE_MOD_CARD_ALL_OUT_ATTACK.description": "Summon {AttackModuleHp:diff()} Attack Module.\nSummon {DefenseModuleHp:diff()} Defense Module.\nSummon {SupportModuleHp:diff()} Support Module.",
   "CLOSURE_MOD_CARD_ALL_OUT_ATTACK.smartDescription": "Summon {AttackModuleHp:diff()} Attack Module.\nSummon {DefenseModuleHp:diff()} Defense Module.\nSummon {SupportModuleHp:diff()} Support Module."
 }
-
