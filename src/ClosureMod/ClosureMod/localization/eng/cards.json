@@ -22,6 +22,7 @@
   "CLOSURE_MOD_CARD_ADAPTIVE_RESPONSE.smartDescription": "Deal damage equal to the target's Sluggish.\nGain Block equal to the target's Sluggish.",
   "CLOSURE_MOD_CARD_ADAPTIVE_RESPONSE.descriptionUpgraded": "Deal damage equal to the target's Sluggish + 2.\nGain Block equal to the target's Sluggish + 2.",
   "CLOSURE_MOD_CARD_ADAPTIVE_RESPONSE.smartDescriptionUpgraded": "Deal damage equal to the target's Sluggish + 2.\nGain Block equal to the target's Sluggish + 2.",
+  "CLOSURE_MOD_CARD_ADAPTIVE_RESPONSE.descriptionPreview": "Deal {PreviewAmount:diff()} damage.\nGain {PreviewAmount:diff()} Block.",
   "CLOSURE_MOD_CARD_RISK_HEDGE.title": "Risk Hedge",
   "CLOSURE_MOD_CARD_RISK_HEDGE.description": "At end of turn, gain {BlockPerDebt:diff()} Block for each Debt.",
   "CLOSURE_MOD_CARD_RISK_HEDGE.smartDescription": "At end of turn, gain {BlockPerDebt:diff()} Block for each Debt.",
