@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -20,13 +21,14 @@ public sealed class OffDuty : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Sluggish];
+    public override bool GainsBlock => true;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/Overtime.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DynamicVar("Draw", 1)
+        new BlockVar(12m, ValueProp.Move)
     ];
 
     public OffDuty() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
@@ -35,12 +37,7 @@ public sealed class OffDuty : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<TimelyStopNextTurnDrawPower>(
-            choiceContext,
-            Owner.Creature,
-            DynamicVars["Draw"].BaseValue,
-            Owner.Creature,
-            this);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
 
         int currentSluggish = Owner.Creature.Powers
             .OfType<SluggishPower>()
@@ -61,6 +58,6 @@ public sealed class OffDuty : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Draw"].UpgradeValueBy(1);
+        DynamicVars.Block.UpgradeValueBy(3m);
     }
 }

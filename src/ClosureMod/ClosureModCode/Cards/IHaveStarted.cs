@@ -11,7 +11,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
-[RegisterCard(typeof(ColorlessCardPool))]
+[RegisterCard(typeof(EventCardPool))]
 public sealed class IHaveStarted : ModCardTemplate
 {
     private const int BaseEnergyCost = 0;

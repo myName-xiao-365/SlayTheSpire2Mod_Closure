@@ -17,6 +17,7 @@ internal static class NonRewardCardFilter
     {
         return card is not ClearDebt
             and not HeavyStrike
+            and not Settlement
             and not DrawGame
             and not WaitForStartup
             and not IHaveStarted;

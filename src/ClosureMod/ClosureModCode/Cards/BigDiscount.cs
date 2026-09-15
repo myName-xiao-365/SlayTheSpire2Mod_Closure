@@ -31,7 +31,10 @@ public sealed class BigDiscount : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        bool CanDiscount(CardModel card) => !ReferenceEquals(card, this) && !card.EnergyCost.CostsX;
+        bool CanDiscount(CardModel card) =>
+            !ReferenceEquals(card, this) &&
+            !card.EnergyCost.CostsX &&
+            card.Type is not CardType.Status and not CardType.Curse;
 
         List<CardModel> targets = Owner.PlayerCombatState?.Hand.Cards
             .Where(CanDiscount)

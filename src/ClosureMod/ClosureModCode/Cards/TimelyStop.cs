@@ -1,5 +1,4 @@
 using ClosureMod.Characters;
-using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
@@ -21,8 +20,6 @@ public sealed class TimelyStop : ModCardTemplate
     private const CardRarity CardRarityValue = CardRarity.Uncommon;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Debt];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");

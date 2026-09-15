@@ -75,7 +75,7 @@ internal static class TurnEnergySpendTracker
         try
         {
             owner = card.Owner;
-            return owner?.PlayerCombatState is not null;
+            return card.IsInCombat && owner?.PlayerCombatState is not null;
         }
         catch (CanonicalModelException)
         {
@@ -112,7 +112,8 @@ internal static class AdditionalOrderHasLocalModifierPatch
         CardModel? card = __instance._card;
         if (!__result &&
             card is AdditionalOrder &&
-            TurnEnergySpendTracker.TryGetCombatOwner(card, out _))
+            TurnEnergySpendTracker.TryGetCombatOwner(card, out Player owner) &&
+            TurnEnergySpendTracker.HasPlayedCardCostingAtLeast(owner, AdditionalOrder.DiscountThreshold))
         {
             __result = true;
         }

@@ -22,7 +22,7 @@ public sealed class StatusReset : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/StatusReset.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

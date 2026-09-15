@@ -25,7 +25,7 @@ public sealed class AdditionalOrder : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(18, ValueProp.Move)
+        new DamageVar(16, ValueProp.Move)
     ];
 
     public AdditionalOrder() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)

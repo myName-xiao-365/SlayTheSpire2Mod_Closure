@@ -5,54 +5,46 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class RushProgress : ModCardTemplate
+public sealed class SluggishGuard : ModCardTemplate
 {
-    private const int BaseEnergyCost = 2;
-    private const CardType CardKind = CardType.Attack;
+    private const int BaseEnergyCost = 1;
+    private const CardType CardKind = CardType.Skill;
     private const CardRarity CardRarityValue = CardRarity.Common;
-    private const TargetType CardTarget = TargetType.AnyEnemy;
+    private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/RushProgress.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/PredictiveInterception.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(16, ValueProp.Move),
-        new DynamicVar("Sluggish", 1)
+        new DynamicVar("BlockPerSluggish", 3)
     ];
 
-    public RushProgress() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
+    public SluggishGuard() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
-            .Targeting(cardPlay.Target)
-            .Execute(choiceContext);
-        await PowerCmd.Apply<SluggishPower>(
+        await PowerCmd.Apply<SluggishGuardPower>(
             choiceContext,
             Owner.Creature,
-            DynamicVars["Sluggish"].BaseValue,
+            DynamicVars["BlockPerSluggish"].BaseValue,
             Owner.Creature,
             this);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(6);
+        DynamicVars["BlockPerSluggish"].UpgradeValueBy(1);
     }
 }

@@ -1,6 +1,5 @@
 using ClosureMod.Characters;
-using ClosureMod.Powers;
-using MegaCrit.Sts2.Core.Commands;
+using ClosureMod.Summons;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -10,38 +9,38 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class RiskHedge : ModCardTemplate
+public sealed class EnhancedSupportModule : ModCardTemplate
 {
-    private const int BaseEnergyCost = 1;
-    private const CardType CardKind = CardType.Power;
-    private const CardRarity CardRarityValue = CardRarity.Uncommon;
+    private const int BaseEnergyCost = 5;
+    private const CardType CardKind = CardType.Skill;
+    private const CardRarity CardRarityValue = CardRarity.Rare;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.png");
+        PortraitPath: $"{Entry.ResPath}/images/summons/SupportModule.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DynamicVar("BlockPerDebt", 3)
+        new DynamicVar("ModuleHp", 2)
     ];
 
-    public RiskHedge() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
+    public EnhancedSupportModule() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<RiskHedgePower>(
+        await DroneSwarmManager.Summon(
             choiceContext,
-            Owner.Creature,
-            DynamicVars["BlockPerDebt"].BaseValue,
-            Owner.Creature,
+            Owner,
+            DroneModuleKind.Support,
+            (int)DynamicVars["ModuleHp"].BaseValue,
             this);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["BlockPerDebt"].UpgradeValueBy(1);
+        DynamicVars["ModuleHp"].UpgradeValueBy(1);
     }
 }

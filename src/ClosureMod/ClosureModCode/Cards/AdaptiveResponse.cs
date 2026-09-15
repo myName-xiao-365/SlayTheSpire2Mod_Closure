@@ -36,7 +36,7 @@ public sealed class AdaptiveResponse : ModCardTemplate
     public int PreviewAmount => _previewTarget is null ? 0 : CalculateAmount(_previewTarget);
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClosureModStrike.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/AdaptiveResponse.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -111,7 +111,7 @@ internal static class AdaptiveResponseDescriptionPatch
 [HarmonyPatch(typeof(NCardPlay), nameof(NCardPlay.OnCreatureHover))]
 internal static class AdaptiveResponseCreatureHoverPatch
 {
-    private static void Postfix(NCardPlay __instance, NCreature creature)
+    private static void Prefix(NCardPlay __instance, NCreature creature)
     {
         if (__instance.Card is AdaptiveResponse adaptiveResponse)
         {
@@ -123,7 +123,7 @@ internal static class AdaptiveResponseCreatureHoverPatch
 [HarmonyPatch(typeof(NCardPlay), nameof(NCardPlay.OnCreatureUnhover))]
 internal static class AdaptiveResponseCreatureUnhoverPatch
 {
-    private static void Postfix(NCardPlay __instance)
+    private static void Prefix(NCardPlay __instance)
     {
         ClearPreview(__instance);
     }

@@ -5,17 +5,16 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class RushProgress : ModCardTemplate
+public sealed class SluggishTest : ModCardTemplate
 {
-    private const int BaseEnergyCost = 2;
-    private const CardType CardKind = CardType.Attack;
+    private const int BaseEnergyCost = 1;
+    private const CardType CardKind = CardType.Skill;
     private const CardRarity CardRarityValue = CardRarity.Common;
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
@@ -23,15 +22,14 @@ public sealed class RushProgress : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/RushProgress.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/DelayedCalibration.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(16, ValueProp.Move),
-        new DynamicVar("Sluggish", 1)
+        new DynamicVar("Sluggish", 2)
     ];
 
-    public RushProgress() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
+    public SluggishTest() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
@@ -39,13 +37,9 @@ public sealed class RushProgress : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
-            .Targeting(cardPlay.Target)
-            .Execute(choiceContext);
         await PowerCmd.Apply<SluggishPower>(
             choiceContext,
-            Owner.Creature,
+            cardPlay.Target,
             DynamicVars["Sluggish"].BaseValue,
             Owner.Creature,
             this);
@@ -53,6 +47,6 @@ public sealed class RushProgress : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(6);
+        DynamicVars["Sluggish"].UpgradeValueBy(1);
     }
 }

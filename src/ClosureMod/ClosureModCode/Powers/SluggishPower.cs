@@ -20,6 +20,7 @@ public sealed class SluggishPower : ModPowerTemplate
 
     private static readonly HashSet<string> LockedBuffPowerNames =
     [
+        "EscapeArtistPower",
         "HardToKillPower",
         "HardenedShellPower",
         "MinionPower"
@@ -74,6 +75,7 @@ public sealed class SluggishPower : ModPowerTemplate
         _resolvingSideEffects = true;
         try
         {
+            await SluggishGuardPower.ResolveSluggishApplied(choiceContext, amount, applier, cardSource);
             await ApplySluggishSideEffects(choiceContext, amount, applier ?? Owner, cardSource);
         }
         finally
