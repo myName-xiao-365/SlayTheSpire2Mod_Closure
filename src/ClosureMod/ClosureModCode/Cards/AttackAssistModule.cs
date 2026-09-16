@@ -20,7 +20,7 @@ public sealed class AttackAssistModule : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/summons/AttackModule.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/AttackAssistModule.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

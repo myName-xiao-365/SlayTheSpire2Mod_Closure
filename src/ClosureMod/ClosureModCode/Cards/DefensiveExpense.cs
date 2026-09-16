@@ -19,7 +19,7 @@ public sealed class DefensiveExpense : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClosureModDefend.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/DefensiveExpense.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

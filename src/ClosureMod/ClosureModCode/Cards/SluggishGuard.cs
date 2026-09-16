@@ -22,7 +22,7 @@ public sealed class SluggishGuard : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/PredictiveInterception.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/SluggishGuard.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

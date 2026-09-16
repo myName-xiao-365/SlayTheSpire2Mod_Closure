@@ -23,6 +23,11 @@ internal static class EnergyDebtCanPlaySimplePatch
             return;
         }
 
+        if (SluggishStunLimiterPower.FindLimiter(__instance)?.BlocksCardPlay == true)
+        {
+            return;
+        }
+
         if (__instance is DontWantToWork && SluggishStunLimiterPower.FindLimiter(__instance) is null)
         {
             return;
@@ -57,6 +62,11 @@ internal static class EnergyDebtCanPlayPatch
             return;
         }
 
+        if (SluggishStunLimiterPower.FindLimiter(__instance)?.BlocksCardPlay == true)
+        {
+            return;
+        }
+
         if (__instance is DontWantToWork && SluggishStunLimiterPower.FindLimiter(__instance) is null)
         {
             return;
@@ -79,6 +89,11 @@ internal static class EnergyDebtCostColorPatch
     private static void Postfix(CardModel __0, ref CardCostColor __result)
     {
         if (__result != CardCostColor.InsufficientResources)
+        {
+            return;
+        }
+
+        if (SluggishStunLimiterPower.FindLimiter(__0)?.BlocksCardPlay == true)
         {
             return;
         }

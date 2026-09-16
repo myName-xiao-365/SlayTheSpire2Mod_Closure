@@ -27,7 +27,7 @@ public sealed class SuddenInspiration : ModCardTemplate
         [CardKeyword.Exhaust, ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/SuddenInspiration.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

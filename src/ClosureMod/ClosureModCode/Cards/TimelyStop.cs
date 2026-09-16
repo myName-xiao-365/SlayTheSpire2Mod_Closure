@@ -22,7 +22,7 @@ public sealed class TimelyStop : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/TimelyStop.png");
 
     public TimelyStop() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {

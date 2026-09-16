@@ -22,7 +22,7 @@ public sealed class SluggishTest : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/DelayedCalibration.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/SluggishTest.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

@@ -18,7 +18,7 @@ public sealed class EnhancedSupportModule : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/summons/SupportModule.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/EnhancedSupportModule.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

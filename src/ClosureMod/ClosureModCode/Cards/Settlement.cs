@@ -14,13 +14,14 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class Settlement : ModCardTemplate
 {
-    private const int BaseEnergyCost = 5;
+    private const int BaseEnergyCost = 3;
     private const CardType CardKind = CardType.Attack;
     private const CardRarity CardRarityValue = CardRarity.Ancient;
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        IsUpgraded ? [CardKeyword.Retain, ClosureKeywords.Sluggish] : [ClosureKeywords.Sluggish];
 
     public override bool CanBeGeneratedInCombat => false;
 
@@ -31,7 +32,8 @@ public sealed class Settlement : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(55, ValueProp.Move)
+        new DamageVar(36, ValueProp.Move),
+        new DynamicVar("Sluggish", 5)
     ];
 
     public Settlement() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
@@ -42,12 +44,8 @@ public sealed class Settlement : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        int sluggishStacks = cardPlay.Target.Powers
-            .OfType<SluggishPower>()
-            .Where(power => power.Amount > 0)
-            .Sum(power => power.Amount);
-        decimal damage = DynamicVars.Damage.BaseValue * (1m + sluggishStacks * SluggishPower.DamageLossPerStack);
-        if (cardPlay.Target.IsStunned)
+        decimal damage = DynamicVars.Damage.BaseValue;
+        if (Owner.Creature.CombatState?.Enemies.Any(enemy => enemy is { IsAlive: true, IsStunned: true }) == true)
         {
             damage *= 2m;
         }
@@ -56,10 +54,22 @@ public sealed class Settlement : ModCardTemplate
             .FromCard(this)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
+
+        if (cardPlay.Target.IsAlive)
+        {
+            await PowerCmd.Apply<SluggishPower>(
+                choiceContext,
+                cardPlay.Target,
+                DynamicVars["Sluggish"].BaseValue,
+                Owner.Creature,
+                this);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(10);
+        AddKeyword(CardKeyword.Retain);
+        DynamicVars.Damage.UpgradeValueBy(9);
+        DynamicVars["Sluggish"].UpgradeValueBy(3);
     }
 }

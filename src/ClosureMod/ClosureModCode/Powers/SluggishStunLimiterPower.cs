@@ -64,4 +64,10 @@ public sealed class SluggishStunLimiterPower : ModPowerTemplate
     {
         return card.Owner?.Creature.Powers.OfType<SluggishStunLimiterPower>().FirstOrDefault();
     }
+
+    public static bool IsStunned(Creature creature)
+    {
+        return creature.IsStunned ||
+               creature.Powers.OfType<SluggishStunLimiterPower>().Any();
+    }
 }

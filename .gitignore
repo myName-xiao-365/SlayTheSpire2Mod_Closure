@@ -23,6 +23,7 @@ _card_contact*.png
 # Local source/reference art that is processed into src/ClosureMod assets
 /卡面/
 /新增卡面/
+/new card/
 /动作/
 /assets/
 /docs/

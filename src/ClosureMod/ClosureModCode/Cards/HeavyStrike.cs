@@ -50,12 +50,16 @@ public sealed class HeavyStrike : ModCardTemplate
             .FromCard(this)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
-        await PowerCmd.Apply<SluggishPower>(
-            choiceContext,
-            cardPlay.Target,
-            DynamicVars["TargetSluggish"].BaseValue,
-            Owner.Creature,
-            this);
+        if (cardPlay.Target.IsAlive)
+        {
+            await PowerCmd.Apply<SluggishPower>(
+                choiceContext,
+                cardPlay.Target,
+                DynamicVars["TargetSluggish"].BaseValue,
+                Owner.Creature,
+                this);
+        }
+
         await PowerCmd.Apply<SluggishPower>(
             choiceContext,
             Owner.Creature,

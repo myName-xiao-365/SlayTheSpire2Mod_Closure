@@ -27,6 +27,7 @@ public sealed class SluggishPower : ModPowerTemplate
     ];
 
     private bool _resolvingSideEffects;
+    private int _pendingPlayerStuns;
 
     public override PowerType Type => PowerType.Debuff;
 
@@ -146,7 +147,22 @@ public sealed class SluggishPower : ModPowerTemplate
 
         for (int i = 0; i < stunCount; i++)
         {
-            await TriggerStun(choiceContext, cardSource);
+            await QueueOrTriggerStun(choiceContext, cardSource);
+        }
+    }
+
+    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        if (_pendingPlayerStuns <= 0 || !ReferenceEquals(cardPlay.Card.Owner?.Creature, Owner))
+        {
+            return;
+        }
+
+        int stunsToApply = _pendingPlayerStuns;
+        _pendingPlayerStuns = 0;
+        for (int i = 0; i < stunsToApply; i++)
+        {
+            await TriggerStun(choiceContext, cardPlay.Card);
         }
     }
 
@@ -158,7 +174,7 @@ public sealed class SluggishPower : ModPowerTemplate
         return Math.Max(1, StunThreshold - thresholdReduction);
     }
 
-    private async Task TriggerStun(PlayerChoiceContext choiceContext, CardModel? cardSource)
+    private async Task QueueOrTriggerStun(PlayerChoiceContext choiceContext, CardModel? cardSource)
     {
         if (Owner.IsMonster && Owner.Monster?.NextMove is { } nextMove)
         {
@@ -166,6 +182,17 @@ public sealed class SluggishPower : ModPowerTemplate
             return;
         }
 
+        if (cardSource?.Owner is not null)
+        {
+            _pendingPlayerStuns++;
+            return;
+        }
+
+        await TriggerStun(choiceContext, cardSource);
+    }
+
+    private async Task TriggerStun(PlayerChoiceContext choiceContext, CardModel? cardSource)
+    {
         VfxCmd.PlayOnCreature(Owner, StunnedVfxPath);
         SluggishStunLimiterPower? limiter = await PowerCmd.Apply<SluggishStunLimiterPower>(
             choiceContext,

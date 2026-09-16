@@ -23,7 +23,7 @@ public sealed class InterferenceFeedback : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClosureModStrike.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/InterferenceFeedback.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

@@ -22,7 +22,7 @@ public sealed class BloodfiendBite : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain, ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/BloodfiendBite.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

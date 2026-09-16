@@ -20,7 +20,7 @@ public sealed class InterestCompounding : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/InterestCompounding.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
