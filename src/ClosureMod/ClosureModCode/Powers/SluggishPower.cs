@@ -2,9 +2,12 @@ using ClosureMod.Keywords;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -16,18 +19,24 @@ public sealed class SluggishPower : ModPowerTemplate
 {
     public const int StunThreshold = 10;
     public const decimal DamageLossPerStack = 0.05m;
-    private const string StunnedVfxPath = "res://scenes/vfx/stunned_vfx.tscn";
 
     private static readonly HashSet<string> LockedBuffPowerNames =
     [
         "EscapeArtistPower",
         "HardToKillPower",
         "HardenedShellPower",
-        "MinionPower"
+        "MinionPower",
+        // These native encounter states must not be removed by Sluggish:
+        // Sandpit (沙坑) and Asleep (沉睡) control the encounter itself.
+        "SandpitPower",
+        "AsleepPower"
     ];
 
     private bool _resolvingSideEffects;
-    private int _pendingPlayerStuns;
+    private int _pendingPlayerStunCount;
+    private Creature? _pendingPlayerStunApplier;
+    private CardModel? _pendingPlayerStunCardSource;
+    private PlayerChoiceContext? _pendingPlayerStunChoiceContext;
 
     public override PowerType Type => PowerType.Debuff;
 
@@ -82,6 +91,68 @@ public sealed class SluggishPower : ModPowerTemplate
         finally
         {
             _resolvingSideEffects = false;
+        }
+    }
+
+    public override async Task AfterCardChangedPilesLate(
+        CardModel card,
+        PileType previousPileType,
+        AbstractModel? source)
+    {
+        if (!Owner.IsPlayer ||
+            previousPileType != PileType.Play ||
+            _pendingPlayerStunCount <= 0 ||
+            !ReferenceEquals(card, _pendingPlayerStunCardSource))
+        {
+            return;
+        }
+
+        await ResolvePendingPlayerStun(null);
+    }
+
+    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        if (!Owner.IsPlayer ||
+            _pendingPlayerStunCount <= 0 ||
+            !ReferenceEquals(cardPlay.Card, _pendingPlayerStunCardSource))
+        {
+            return;
+        }
+
+        await ResolvePendingPlayerStun(choiceContext);
+    }
+
+    public override async Task BeforeFlushLate(PlayerChoiceContext choiceContext, Player player)
+    {
+        if (!ReferenceEquals(Owner, player.Creature) ||
+            _pendingPlayerStunCount <= 0)
+        {
+            return;
+        }
+
+        await ResolvePendingPlayerStun(choiceContext);
+    }
+
+    private async Task ResolvePendingPlayerStun(PlayerChoiceContext? choiceContext)
+    {
+        int stunCount = _pendingPlayerStunCount;
+        Creature applier = _pendingPlayerStunApplier ?? Owner;
+        CardModel? cardSource = _pendingPlayerStunCardSource;
+        PlayerChoiceContext? context = choiceContext ?? _pendingPlayerStunChoiceContext;
+        if (context is null)
+        {
+            return;
+        }
+
+        _pendingPlayerStunCount = 0;
+        _pendingPlayerStunApplier = null;
+        _pendingPlayerStunCardSource = null;
+        _pendingPlayerStunChoiceContext = null;
+
+        await PowerCmd.ModifyAmount(context, this, -Amount, applier, cardSource);
+        for (int i = 0; i < stunCount; i++)
+        {
+            await TriggerPlayerStunThisTurn(context, cardSource);
         }
     }
 
@@ -143,7 +214,20 @@ public sealed class SluggishPower : ModPowerTemplate
             return;
         }
 
-        await PowerCmd.ModifyAmount(choiceContext, this, -stunCount * stunThreshold, applier, cardSource);
+        int stacksToRemove = Owner.IsPlayer
+            ? Amount
+            : stunCount * stunThreshold;
+
+        if (Owner.IsPlayer && cardSource is not null)
+        {
+            _pendingPlayerStunCount += stunCount;
+            _pendingPlayerStunApplier = applier;
+            _pendingPlayerStunCardSource = cardSource;
+            _pendingPlayerStunChoiceContext = choiceContext;
+            return;
+        }
+
+        await PowerCmd.ModifyAmount(choiceContext, this, -stacksToRemove, applier, cardSource);
 
         for (int i = 0; i < stunCount; i++)
         {
@@ -151,19 +235,75 @@ public sealed class SluggishPower : ModPowerTemplate
         }
     }
 
-    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    public static async Task ClearSluggishAndStun(
+        PlayerChoiceContext choiceContext,
+        Creature target,
+        Creature applier,
+        CardModel? cardSource)
     {
-        if (_pendingPlayerStuns <= 0 || !ReferenceEquals(cardPlay.Card.Owner?.Creature, Owner))
+        SluggishPower? sluggish = target.Powers
+            .OfType<SluggishPower>()
+            .FirstOrDefault();
+        if (sluggish is not null)
+        {
+            await sluggish.ClearSluggishAndStun(choiceContext, applier, cardSource);
+            return;
+        }
+
+        await TriggerStunWithoutSluggish(choiceContext, target, cardSource);
+    }
+
+    private async Task ClearSluggishAndStun(
+        PlayerChoiceContext choiceContext,
+        Creature applier,
+        CardModel? cardSource)
+    {
+        if (Amount > 0)
+        {
+            await PowerCmd.ModifyAmount(choiceContext, this, -Amount, applier, cardSource);
+        }
+
+        if (SluggishStunLimiterPower.IsStunned(Owner))
         {
             return;
         }
 
-        int stunsToApply = _pendingPlayerStuns;
-        _pendingPlayerStuns = 0;
-        for (int i = 0; i < stunsToApply; i++)
+        if (Owner.IsPlayer && cardSource is not null)
         {
-            await TriggerStun(choiceContext, cardPlay.Card);
+            _pendingPlayerStunCount++;
+            _pendingPlayerStunApplier = applier;
+            _pendingPlayerStunCardSource = cardSource;
+            _pendingPlayerStunChoiceContext = choiceContext;
+            return;
         }
+
+        await QueueOrTriggerStun(choiceContext, cardSource);
+    }
+
+    private static async Task TriggerStunWithoutSluggish(
+        PlayerChoiceContext choiceContext,
+        Creature target,
+        CardModel? cardSource)
+    {
+        if (SluggishStunLimiterPower.IsStunned(target))
+        {
+            return;
+        }
+
+        if (target.IsMonster && target.Monster?.NextMove is { } nextMove)
+        {
+            await CreatureCmd.Stun(target, nextMove.Id);
+            return;
+        }
+
+        await PowerCmd.Apply<SluggishStunLimiterPower>(
+            choiceContext,
+            target,
+            1,
+            target,
+            cardSource,
+            true);
+        PlayStunnedVfx(target);
     }
 
     private int GetStunThreshold()
@@ -182,28 +322,46 @@ public sealed class SluggishPower : ModPowerTemplate
             return;
         }
 
-        if (cardSource?.Owner is not null)
+        if (Owner.IsPlayer)
         {
-            _pendingPlayerStuns++;
+            await TriggerPlayerStunThisTurn(choiceContext, cardSource);
             return;
         }
 
         await TriggerStun(choiceContext, cardSource);
     }
 
-    private async Task TriggerStun(PlayerChoiceContext choiceContext, CardModel? cardSource)
+    private async Task TriggerPlayerStunThisTurn(PlayerChoiceContext choiceContext, CardModel? cardSource)
     {
-        VfxCmd.PlayOnCreature(Owner, StunnedVfxPath);
-        SluggishStunLimiterPower? limiter = await PowerCmd.Apply<SluggishStunLimiterPower>(
+        await PowerCmd.Apply<SluggishStunLimiterPower>(
             choiceContext,
             Owner,
             1,
             Owner,
             cardSource,
             true);
-        if (cardSource is not null && limiter is not null)
+        PlayStunnedVfx(Owner);
+    }
+
+    private async Task TriggerStun(PlayerChoiceContext choiceContext, CardModel? cardSource)
+    {
+        await PowerCmd.Apply<SluggishStunLimiterPower>(
+            choiceContext,
+            Owner,
+            1,
+            Owner,
+            cardSource,
+            true);
+
+        PlayStunnedVfx(Owner);
+    }
+
+    private static void PlayStunnedVfx(Creature owner)
+    {
+        // The native factory binds the creature; generic VfxCmd only accepts scene-relative paths.
+        if (owner.GetVfxContainer() is { } container)
         {
-            limiter.IgnoreCurrentCardPlay();
+            container.AddChildSafely(NStunnedVfx.Create(owner));
         }
     }
 }

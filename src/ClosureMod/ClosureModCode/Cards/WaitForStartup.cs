@@ -12,12 +12,12 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
-[RegisterCard(typeof(EventCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public sealed class WaitForStartup : ModCardTemplate
 {
     private const int BaseEnergyCost = 0;
     private const CardType CardKind = CardType.Skill;
-    private const CardRarity CardRarityValue = CardRarity.Common;
+    private const CardRarity CardRarityValue = CardRarity.Token;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 

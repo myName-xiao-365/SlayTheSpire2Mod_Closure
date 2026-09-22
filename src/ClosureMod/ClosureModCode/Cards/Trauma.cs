@@ -1,13 +1,13 @@
-using ClosureMod.Characters;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
-[RegisterCard(typeof(ClosureModCardPool))]
+[RegisterCard(typeof(CurseCardPool))]
 public sealed class Trauma : ModCardTemplate
 {
     private const int BaseEnergyCost = -1;
@@ -24,7 +24,7 @@ public sealed class Trauma : ModCardTemplate
     public override int MaxUpgradeLevel => 0;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/ClearDebt.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/Trauma.png");
 
     public Trauma() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {

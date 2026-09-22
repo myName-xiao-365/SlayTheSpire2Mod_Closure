@@ -18,7 +18,7 @@ internal static class DontWantToWorkCanPlaySimplePatch
             return;
         }
 
-        __result = __result && SluggishStunLimiterPower.FindLimiter(__instance) is not null;
+        __result = __result && SluggishStunLimiterPower.IsStunned(__instance);
     }
 }
 
@@ -48,7 +48,7 @@ internal static class DontWantToWorkCanPlayPatch
             return;
         }
 
-        if (SluggishStunLimiterPower.FindLimiter(__instance) is not null)
+        if (SluggishStunLimiterPower.IsStunned(__instance))
         {
             return;
         }

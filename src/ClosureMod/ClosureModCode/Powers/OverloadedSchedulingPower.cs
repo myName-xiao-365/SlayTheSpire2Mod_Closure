@@ -18,8 +18,8 @@ public sealed class OverloadedSchedulingPower : ModPowerTemplate
     protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.SluggishId];
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/characters/energy.png",
-        BigIconPath: $"{Entry.ResPath}/images/characters/energy.png");
+        IconPath: $"{Entry.ResPath}/images/powers/OverloadedSchedulingPower.png",
+        BigIconPath: $"{Entry.ResPath}/images/powers/OverloadedSchedulingPower.png");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {

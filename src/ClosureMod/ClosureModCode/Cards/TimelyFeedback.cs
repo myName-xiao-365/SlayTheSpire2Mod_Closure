@@ -22,7 +22,7 @@ public sealed class TimelyFeedback : ModCardTemplate
         IsUpgraded ? [CardKeyword.Innate, ClosureKeywords.Sluggish] : [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/RiskHedge.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/TimelyFeedback.png");
 
     public TimelyFeedback() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {

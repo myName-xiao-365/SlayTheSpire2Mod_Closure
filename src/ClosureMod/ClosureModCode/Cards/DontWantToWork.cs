@@ -40,7 +40,7 @@ public sealed class DontWantToWork : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        if (Owner.Creature.Powers.OfType<SluggishStunLimiterPower>().FirstOrDefault() is null)
+        if (!SluggishStunLimiterPower.IsStunned(Owner.Creature))
         {
             return;
         }

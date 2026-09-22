@@ -23,7 +23,7 @@ public sealed class MerchantForm : ModCardTemplate
         IsUpgraded ? [ClosureKeywords.Sluggish] : [CardKeyword.Ethereal, ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/RiskHedge.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/{(IsUpgraded ? "MerchantFormUpgraded" : "MerchantForm")}.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -42,5 +42,10 @@ public sealed class MerchantForm : ModCardTemplate
             1,
             Owner.Creature,
             this);
+    }
+
+    protected override void OnUpgrade()
+    {
+        RemoveKeyword(CardKeyword.Ethereal);
     }
 }

@@ -33,8 +33,11 @@ internal static class StarterCardRewardPoolPatch
         UnlockState unlockState,
         CardMultiplayerConstraint multiplayerConstraint)
     {
+        // The library also reads this list; starter cards stay unlocked, while reward filters exclude them below.
         __result = __result
-            .Where(card => __instance is not ClosureModCardPool || NonRewardCardFilter.IsAllowed(card))
+            .Where(card => __instance is not ClosureModCardPool
+                || card is HeavyStrike or ClearDebt
+                || NonRewardCardFilter.IsAllowed(card))
             .ToList();
     }
 }

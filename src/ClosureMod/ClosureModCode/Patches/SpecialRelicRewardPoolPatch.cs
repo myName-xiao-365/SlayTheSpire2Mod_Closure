@@ -20,8 +20,10 @@ internal static class SpecialRelicRewardPoolPatch
             return;
         }
 
+        // Starter relics must remain unlocked for the library; RelicGrabBag excludes Starter rarity itself.
         __result = __result
-            .Where(relic => relic is not StrangeButton and not ClosureModRelic)
+            .Where(relic => relic is not StrangeButton
+                and not GaulCheque and not GiftCard and not StructuralPrinciple and not SniperScope)
             .ToList();
     }
 }

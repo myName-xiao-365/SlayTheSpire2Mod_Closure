@@ -7,9 +7,11 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.Runs;
 using ClosureMod.Characters;
 using ClosureMod.Keywords;
 using ClosureMod.Powers;
+using ClosureMod.Events;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Content;
@@ -26,7 +28,7 @@ public class ClosureModRelic : ModRelicTemplate
     public const int MaxEnergyDebt = 2;
 
     // 稀有度。
-    public override RelicRarity Rarity => RelicRarity.Common;
+    public override RelicRarity Rarity => RelicRarity.Starter;
 
     protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.DebtId];
 
@@ -82,6 +84,23 @@ public class ClosureModRelic : ModRelicTemplate
         return currentEnergy - energyCost >= -GetMaxEnergyDebt(owner);
     }
 
+    public override EventModel ModifyNextEvent(EventModel nextEvent)
+    {
+        if (Owner?.RunState is not RunState runState || !RhodesIslandWorkshop.IsFirstUnknownRoom(runState))
+        {
+            return nextEvent;
+        }
+
+        return ModelDb.Event<RhodesIslandWorkshop>();
+    }
+
+    public override IReadOnlySet<RoomType> ModifyUnknownMapPointRoomTypes(IReadOnlySet<RoomType> roomTypes)
+    {
+        return Owner?.RunState is RunState run && RhodesIslandWorkshop.IsFirstUnknownRoom(run)
+            ? new HashSet<RoomType> { RoomType.Event }
+            : roomTypes;
+    }
+
     public override async Task BeforeSideTurnEnd(
         PlayerChoiceContext choiceContext,
         CombatSide side,
@@ -111,7 +130,7 @@ public sealed class AncientClosureModRelic : ClosureModRelic
     public new const int MaxEnergyDebt = 3;
     public const int EndTurnDebtReduction = 1;
 
-    public override RelicRarity Rarity => RelicRarity.Ancient;
+    public override RelicRarity Rarity => RelicRarity.Starter;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -120,8 +139,7 @@ public sealed class AncientClosureModRelic : ClosureModRelic
     ];
 
     public override RelicAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/relics/{nameof(ClosureModRelic)}.png",
-        IconOutlinePath: $"{Entry.ResPath}/images/relics/{nameof(ClosureModRelic)}.png",
-        BigIconPath: $"{Entry.ResPath}/images/relics/{nameof(ClosureModRelic)}.png");
+        IconPath: $"{Entry.ResPath}/images/relics/{nameof(AncientClosureModRelic)}.png",
+        IconOutlinePath: $"{Entry.ResPath}/images/relics/{nameof(AncientClosureModRelic)}.png",
+        BigIconPath: $"{Entry.ResPath}/images/relics/{nameof(AncientClosureModRelic)}.png");
 }
-

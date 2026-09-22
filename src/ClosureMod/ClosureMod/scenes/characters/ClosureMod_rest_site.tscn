@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Texture2D" path="res://ClosureMod/images/characters/ClosureMod_character_select.png" id="1_character"]
+[ext_resource type="Script" path="res://ClosureModCode/Characters/ClosureNonCombatVisualController.cs" id="2_controller"]
 
 [node name="ClosureModCharacterRestSite" type="Node2D"]
+script = ExtResource("2_controller")
 
 [node name="Visuals" type="Sprite2D" parent="."]
 position = Vector2(0, -96)
@@ -51,4 +53,3 @@ offset_left = -113.0
 offset_top = -95.0
 offset_right = -113.0
 offset_bottom = -95.0
-

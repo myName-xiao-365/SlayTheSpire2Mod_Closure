@@ -16,7 +16,7 @@ internal static class SluggishCanPlaySimplePatch
             return;
         }
 
-        __result = SluggishStunLimiterPower.FindLimiter(__instance)?.BlocksCardPlay != true;
+        __result = !SluggishStunLimiterPower.IsBlockedByStun(__instance);
     }
 }
 
@@ -45,14 +45,14 @@ internal static class SluggishCanPlayPatch
             return;
         }
 
-        SluggishStunLimiterPower? limiter = SluggishStunLimiterPower.FindLimiter(__instance);
-        if (limiter?.BlocksCardPlay != true)
+        if (!SluggishStunLimiterPower.IsBlockedByStun(__instance))
         {
             return;
         }
 
         __result = false;
         reason = UnplayableReason.BlockedByHook;
-        preventer = limiter;
+        SluggishStunLimiterPower? limiter = SluggishStunLimiterPower.FindLimiter(__instance);
+        preventer = limiter is not null ? limiter : __instance;
     }
 }

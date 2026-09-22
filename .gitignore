@@ -24,6 +24,8 @@ _card_contact*.png
 /卡面/
 /新增卡面/
 /new card/
+/gift/
+/models/
 /动作/
 /assets/
 /docs/
@@ -42,3 +44,5 @@ vendor/
 
 # Local tool/runtime downloads
 tools/
+/.codex-tools/
+/问题汇报.txt

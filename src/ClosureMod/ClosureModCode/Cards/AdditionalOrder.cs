@@ -12,7 +12,7 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(ClosureModCardPool))]
 public sealed class AdditionalOrder : ModCardTemplate
 {
-    public const int DiscountThreshold = 4;
+    public const int DiscountThreshold = 3;
 
     private const int BaseEnergyCost = 2;
     private const CardType CardKind = CardType.Attack;

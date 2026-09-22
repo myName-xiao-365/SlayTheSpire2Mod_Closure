@@ -7,6 +7,17 @@
   "CLOSURE_MOD_RELIC_ANCIENT_CLOSURE_MOD_RELIC.flavor": "账本底线再次下沉，但至少这次有人负责擦掉一行赤字。",
   "CLOSURE_MOD_RELIC_STRANGE_BUTTON.title": "奇怪的按钮",
   "CLOSURE_MOD_RELIC_STRANGE_BUTTON.description": "获得时，将一张 平局？ 加入牌组。",
-  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.flavor": "显然不该按。也显然会有人按。"
+  "CLOSURE_MOD_RELIC_STRANGE_BUTTON.flavor": "显然不该按。也显然会有人按。",
+  "CLOSURE_MOD_RELIC_GAUL_CHEQUE.title": "高卢支票",
+  "CLOSURE_MOD_RELIC_GAUL_CHEQUE.description": "金币最低可降低至 -100。",
+  "CLOSURE_MOD_RELIC_GAUL_CHEQUE.flavor": "镶金嵌银、奢华无比的支票本，现在已经无从兑现。",
+  "CLOSURE_MOD_RELIC_GIFT_CARD.title": "礼品卡",
+  "CLOSURE_MOD_RELIC_GIFT_CARD.description": "商店商品更容易打折。",
+  "CLOSURE_MOD_RELIC_GIFT_CARD.flavor": "真正优秀的顾客，总能找到下一次促销的理由。",
+  "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.title": "结构性原理",
+  "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.description": "每场战斗仅一次，护盾可格挡超额伤害。",
+  "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.flavor": "能源耗尽前，将万物载离蛮荒。",
+  "CLOSURE_MOD_RELIC_SNIPER_SCOPE.title": "狙击镜",
+  "CLOSURE_MOD_RELIC_SNIPER_SCOPE.description": "每回合开始，本场战斗造成的伤害提高10%。",
+  "CLOSURE_MOD_RELIC_SNIPER_SCOPE.flavor": "有些人曾经注视的地方，或许本来就不在他们能够抵达的距离之内。"
 }
-

@@ -11,7 +11,7 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(ClosureModCardPool))]
 public sealed class SupportAssistModule : ModCardTemplate
 {
-    private const int BaseEnergyCost = 1;
+    private const int BaseEnergyCost = 3;
     private const CardType CardKind = CardType.Skill;
     private const CardRarity CardRarityValue = CardRarity.Rare;
     private const TargetType CardTarget = TargetType.Self;
@@ -43,6 +43,6 @@ public sealed class SupportAssistModule : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["ModuleHp"].UpgradeValueBy(1);
+        EnergyCost.SetCustomBaseCost(2);
     }
 }

@@ -1,6 +1,6 @@
 {
   "CLOSURE_MOD_KEYWORD_SLUGGISH.title": "Sluggish",
-  "CLOSURE_MOD_KEYWORD_SLUGGISH.description": "Each stack lowers attack damage dealt by 5%. Whenever an enemy gains 1 Sluggish, it loses 1 random positive buff. At the trigger threshold, lose that many stacks and become Stunned.",
+  "CLOSURE_MOD_KEYWORD_SLUGGISH.description": "Each stack lowers attack damage dealt by 5%. Whenever an enemy gains 1 Sluggish, it loses 1 random positive buff. At the trigger threshold, enemies lose that many stacks and become Stunned; the player clears Sluggish and becomes Stunned this turn.",
   "CLOSURE_MOD_KEYWORD_DEBT.title": "Debt",
   "CLOSURE_MOD_KEYWORD_DEBT.description": "At end of turn, gain 1 Debt for each negative Energy. At the start of next turn, lose that much Energy."
 }

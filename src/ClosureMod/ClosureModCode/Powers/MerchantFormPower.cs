@@ -20,8 +20,8 @@ public sealed class MerchantFormPower : ModPowerTemplate
     protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.SluggishId];
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/powers/SluggishPower.png",
-        BigIconPath: $"{Entry.ResPath}/images/powers/SluggishPower.png");
+        IconPath: $"{Entry.ResPath}/images/powers/MerchantFormPower.png",
+        BigIconPath: $"{Entry.ResPath}/images/powers/MerchantFormPower.png");
 
     public override decimal ModifyDamageMultiplicative(
         Creature? target,

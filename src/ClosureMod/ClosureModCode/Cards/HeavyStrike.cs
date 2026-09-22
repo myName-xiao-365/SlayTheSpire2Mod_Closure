@@ -18,7 +18,7 @@ public sealed class HeavyStrike : ModCardTemplate
 {
     private const int BaseEnergyCost = 3;
     private const CardType CardKind = CardType.Attack;
-    private const CardRarity CardRarityValue = CardRarity.Common;
+    private const CardRarity CardRarityValue = CardRarity.Basic;
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
 

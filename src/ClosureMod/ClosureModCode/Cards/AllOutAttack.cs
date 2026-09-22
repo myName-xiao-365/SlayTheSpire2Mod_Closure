@@ -11,7 +11,7 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(ClosureModCardPool))]
 public sealed class AllOutAttack : ModCardTemplate
 {
-    private const int BaseEnergyCost = 3;
+    private const int BaseEnergyCost = 5;
     private const CardType CardKind = CardType.Skill;
     private const CardRarity CardRarityValue = CardRarity.Rare;
     private const TargetType CardTarget = TargetType.Self;
@@ -42,6 +42,6 @@ public sealed class AllOutAttack : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        EnergyCost.SetCustomBaseCost(2);
+        EnergyCost.SetCustomBaseCost(4);
     }
 }

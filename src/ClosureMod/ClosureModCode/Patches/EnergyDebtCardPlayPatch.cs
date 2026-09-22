@@ -23,12 +23,12 @@ internal static class EnergyDebtCanPlaySimplePatch
             return;
         }
 
-        if (SluggishStunLimiterPower.FindLimiter(__instance)?.BlocksCardPlay == true)
+        if (SluggishStunLimiterPower.IsBlockedByStun(__instance))
         {
             return;
         }
 
-        if (__instance is DontWantToWork && SluggishStunLimiterPower.FindLimiter(__instance) is null)
+        if (__instance is DontWantToWork && !SluggishStunLimiterPower.IsStunned(__instance))
         {
             return;
         }
@@ -62,12 +62,12 @@ internal static class EnergyDebtCanPlayPatch
             return;
         }
 
-        if (SluggishStunLimiterPower.FindLimiter(__instance)?.BlocksCardPlay == true)
+        if (SluggishStunLimiterPower.IsBlockedByStun(__instance))
         {
             return;
         }
 
-        if (__instance is DontWantToWork && SluggishStunLimiterPower.FindLimiter(__instance) is null)
+        if (__instance is DontWantToWork && !SluggishStunLimiterPower.IsStunned(__instance))
         {
             return;
         }
@@ -93,12 +93,12 @@ internal static class EnergyDebtCostColorPatch
             return;
         }
 
-        if (SluggishStunLimiterPower.FindLimiter(__0)?.BlocksCardPlay == true)
+        if (SluggishStunLimiterPower.IsBlockedByStun(__0))
         {
             return;
         }
 
-        if (__0 is DontWantToWork && SluggishStunLimiterPower.FindLimiter(__0) is null)
+        if (__0 is DontWantToWork && !SluggishStunLimiterPower.IsStunned(__0))
         {
             return;
         }
