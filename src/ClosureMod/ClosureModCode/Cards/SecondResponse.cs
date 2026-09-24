@@ -38,24 +38,16 @@ public sealed class SecondResponse : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        await DealDamage(choiceContext, cardPlay);
-
-        if (cardPlay.Target.Powers.OfType<SluggishPower>().Any(power => power.Amount > 0))
-        {
-            await DealDamage(choiceContext, cardPlay);
-        }
+        int hitCount = cardPlay.Target.Powers.OfType<SluggishPower>().Any(power => power.Amount > 0) ? 2 : 1;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .WithHitCount(hitCount)
+            .FromCard(this)
+            .Targeting(cardPlay.Target)
+            .Execute(choiceContext);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(2);
-    }
-
-    private async Task DealDamage(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
-            .Targeting(cardPlay.Target!)
-            .Execute(choiceContext);
     }
 }

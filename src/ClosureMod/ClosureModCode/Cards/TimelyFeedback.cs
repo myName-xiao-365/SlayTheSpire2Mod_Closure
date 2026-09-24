@@ -19,7 +19,7 @@ public sealed class TimelyFeedback : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        IsUpgraded ? [CardKeyword.Innate, ClosureKeywords.Sluggish] : [ClosureKeywords.Sluggish];
+        IsUpgraded ? [CardKeyword.Innate, ClosureKeywords.Sluggish, ClosureKeywords.Block] : [ClosureKeywords.Sluggish, ClosureKeywords.Block];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/TimelyFeedback.png");

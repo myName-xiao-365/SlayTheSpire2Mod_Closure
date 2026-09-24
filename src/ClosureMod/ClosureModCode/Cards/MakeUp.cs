@@ -58,14 +58,17 @@ public sealed class MakeUp : ModCardTemplate
             return;
         }
 
-        if (IsUpgraded && selectedCard.IsUpgradable)
+        if (IsUpgraded && !selectedCard.IsUpgraded && selectedCard.IsUpgradable)
         {
             // The selected card is the combat copy, so this upgrade is not saved to the deck.
             CardCmd.Upgrade(selectedCard, CardPreviewStyle.None);
         }
 
-        // This flag is consumed when the selected card is played and is combat-only.
-        selectedCard.ExhaustOnNextPlay = true;
+        if (!selectedCard.Keywords.Contains(CardKeyword.Exhaust))
+        {
+            selectedCard.AddKeyword(CardKeyword.Exhaust);
+        }
+
         selectedCard.RequestVisualReload();
         await CardPileCmd.Add(selectedCard, PileType.Hand, CardPilePosition.Top, this, false);
     }

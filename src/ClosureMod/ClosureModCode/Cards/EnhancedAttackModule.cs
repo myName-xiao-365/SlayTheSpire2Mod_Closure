@@ -2,7 +2,6 @@ using ClosureMod.Characters;
 using ClosureMod.Summons;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -45,20 +44,17 @@ public sealed class EnhancedAttackModule : ModCardTemplate
             (int)DynamicVars["ModuleHp"].BaseValue,
             this);
 
-        for (int i = 0; i < (int)DynamicVars["Hits"].BaseValue; i++)
+        int hitCount = (int)DynamicVars["Hits"].BaseValue;
+        if (hitCount <= 0 || CombatState?.HittableEnemies.Any() != true)
         {
-            Creature? target = Owner.RunState.Rng.CombatTargets.NextItem(
-                CombatState?.HittableEnemies.ToList() ?? []);
-            if (target is null)
-            {
-                return;
-            }
-
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this)
-                .Targeting(target)
-                .Execute(choiceContext);
+            return;
         }
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .WithHitCount(hitCount)
+            .FromCard(this)
+            .TargetingRandomOpponents(CombatState, true)
+            .Execute(choiceContext);
     }
 
     protected override void OnUpgrade()

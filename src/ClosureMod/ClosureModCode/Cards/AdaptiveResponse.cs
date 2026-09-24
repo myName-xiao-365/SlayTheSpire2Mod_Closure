@@ -30,7 +30,7 @@ public sealed class AdaptiveResponse : ModCardTemplate
 
     private Creature? _previewTarget;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish, ClosureKeywords.Block];
 
     public bool HasPreviewTarget => _previewTarget is not null;
     public int PreviewAmount => _previewTarget is null ? 0 : CalculateAmount(_previewTarget);

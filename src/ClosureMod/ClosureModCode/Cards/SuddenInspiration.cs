@@ -24,7 +24,7 @@ public sealed class SuddenInspiration : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        [CardKeyword.Exhaust, ClosureKeywords.Sluggish];
+        [CardKeyword.Exhaust, ClosureKeywords.Sluggish, ClosureKeywords.Artifact];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/SuddenInspiration.png");

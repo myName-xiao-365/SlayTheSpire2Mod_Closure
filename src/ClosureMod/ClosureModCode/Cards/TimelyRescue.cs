@@ -1,4 +1,5 @@
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -22,6 +23,7 @@ public sealed class TimelyRescue : ModCardTemplate
 
     public override bool GainsBlock => true;
     public override bool ShouldReceiveCombatHooks => true;
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Block];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/TimelyRescue.png");

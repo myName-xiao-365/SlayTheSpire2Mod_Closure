@@ -38,12 +38,13 @@ public sealed class GlobalInterference : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this)
+            .TargetingAllOpponents(CombatState!)
+            .Execute(choiceContext);
+
         foreach (Creature enemy in CombatState?.HittableEnemies ?? [])
         {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this)
-                .Targeting(enemy)
-                .Execute(choiceContext);
             await PowerCmd.Apply<SluggishPower>(
                 choiceContext,
                 enemy,

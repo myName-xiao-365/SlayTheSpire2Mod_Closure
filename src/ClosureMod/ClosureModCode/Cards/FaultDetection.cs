@@ -2,6 +2,7 @@ using ClosureMod.Characters;
 using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -19,6 +20,7 @@ public sealed class FaultDetection : ModCardTemplate
     private const CardRarity CardRarityValue = CardRarity.Uncommon;
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
+    private bool _bonusCurrentHit;
 
     protected override bool HasEnergyCostX => true;
 
@@ -30,7 +32,12 @@ public sealed class FaultDetection : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(10, ValueProp.Move),
-        new DynamicVar("BonusDamage", 4)
+        new DynamicVar("BonusDamage", 4),
+        new CalculationBaseVar(0),
+        new ExtraDamageVar(1),
+        new CalculatedDamageVar(ValueProp.Move).WithMultiplier(
+            (card, _) => card.DynamicVars.Damage.BaseValue +
+                         (((FaultDetection)card)._bonusCurrentHit ? card.DynamicVars["BonusDamage"].BaseValue : 0))
     ];
 
     public FaultDetection() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
@@ -42,31 +49,40 @@ public sealed class FaultDetection : ModCardTemplate
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
         int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
-        for (int i = 0; i < repeatCount && cardPlay.Target.IsAlive; i++)
+        if (repeatCount == 0)
         {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this)
-                .Targeting(cardPlay.Target)
-                .Execute(choiceContext);
+            return;
+        }
 
+        AttackCommand attack = DamageCmd.Attack(DynamicVars.CalculatedDamage)
+            .WithHitCount(repeatCount)
+            .FromCard(this)
+            .Targeting(cardPlay.Target);
+        attack.BeforeDamage(async () =>
+        {
+            _bonusCurrentHit = false;
             if (!cardPlay.Target.IsAlive)
             {
-                break;
+                return;
             }
 
             SluggishPower? sluggish = cardPlay.Target.Powers
                 .OfType<SluggishPower>()
                 .FirstOrDefault(power => power.Amount > 0);
-            if (sluggish is null)
+            if (sluggish is not null)
             {
-                continue;
+                _bonusCurrentHit = true;
+                await PowerCmd.ModifyAmount(choiceContext, sluggish, -1, Owner.Creature, this);
             }
+        });
 
-            await PowerCmd.ModifyAmount(choiceContext, sluggish, -1, Owner.Creature, this);
-            await DamageCmd.Attack(DynamicVars["BonusDamage"].BaseValue)
-                .FromCard(this)
-                .Targeting(cardPlay.Target)
-                .Execute(choiceContext);
+        try
+        {
+            await attack.Execute(choiceContext);
+        }
+        finally
+        {
+            _bonusCurrentHit = false;
         }
     }
 

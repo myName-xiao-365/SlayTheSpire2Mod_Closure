@@ -20,7 +20,7 @@ public sealed class OffDuty : ModCardTemplate
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Sluggish];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Sluggish, ClosureKeywords.Block];
     public override bool GainsBlock => true;
 
     public override CardAssetProfile AssetProfile => new(

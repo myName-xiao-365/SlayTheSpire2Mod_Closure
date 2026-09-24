@@ -60,10 +60,10 @@ public sealed class ForceBuySell : ModCardTemplate
 
         CardPileAddResult? transformResult = await CardCmd.TransformTo<DerivedCard>(
             selectedCard,
-            CardPreviewStyle.None);
+            CardPreviewStyle.HorizontalLayout);
         if (IsUpgraded && transformResult is { } result && result.cardAdded.IsUpgradable)
         {
-            CardCmd.Upgrade(result.cardAdded, CardPreviewStyle.None);
+            CardCmd.Upgrade(result.cardAdded, CardPreviewStyle.HorizontalLayout);
         }
     }
 }

@@ -1,4 +1,5 @@
 using MegaCrit.Sts2.Core.Commands;
+using ClosureMod.Keywords;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -24,7 +25,7 @@ public sealed class IHaveStarted : ModCardTemplate
     private int _defenseModuleMaxHp;
     private int _supportModuleMaxHp;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain, CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain, CardKeyword.Exhaust, ClosureKeywords.Block];
     public override bool CanBeGeneratedInCombat => false;
     public override bool CanBeGeneratedByModifiers => false;
 

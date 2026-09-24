@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -26,6 +27,7 @@ public sealed class ClosureModDefend : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override bool GainsBlock => true;
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Block];
 
     protected override HashSet<CardTag> CanonicalTags => new() { CardTag.Defend };
 
@@ -55,4 +57,3 @@ public sealed class ClosureModDefend : ModCardTemplate
         DynamicVars.Block.UpgradeValueBy(3m);
     }
 }
-

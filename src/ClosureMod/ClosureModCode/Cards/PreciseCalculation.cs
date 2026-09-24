@@ -1,4 +1,5 @@
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using ClosureMod.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -20,6 +21,8 @@ public sealed class PreciseCalculation : ModCardTemplate
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/PreciseCalculation.png");
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.OverflowDamage, ClosureKeywords.Block];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

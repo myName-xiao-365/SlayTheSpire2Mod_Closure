@@ -43,11 +43,11 @@ internal static class TurnEnergySpendTracker
 
         state.HighestSingleCardSpend = amount;
 
-        foreach (CardModel card in player.PlayerCombatState.Hand.Cards)
+        foreach (CardModel handCard in player.PlayerCombatState.Hand.Cards)
         {
-            if (card is AdditionalOrder)
+            if (handCard is AdditionalOrder)
             {
-                card.RequestVisualReload();
+                handCard.RequestVisualReload();
             }
         }
     }

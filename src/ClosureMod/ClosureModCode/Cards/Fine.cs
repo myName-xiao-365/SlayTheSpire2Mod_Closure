@@ -20,7 +20,7 @@ public sealed class Fine : ModCardTemplate
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Vulnerable, ClosureKeywords.Weak, ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/SluggishTest.png");

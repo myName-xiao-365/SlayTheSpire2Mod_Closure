@@ -3,6 +3,7 @@ using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -12,27 +13,26 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class DontWantToWork : ModCardTemplate
+public sealed class NumericalDetection : ModCardTemplate
 {
-    private const int BaseEnergyCost = 0;
+    private const int BaseEnergyCost = 3;
     private const CardType CardKind = CardType.Attack;
     private const CardRarity CardRarityValue = CardRarity.Rare;
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        IsUpgraded ? [CardKeyword.Retain, ClosureKeywords.Sluggish, ClosureKeywords.Block] : [ClosureKeywords.Sluggish, ClosureKeywords.Block];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.jpg");
+        PortraitPath: $"{Entry.ResPath}/images/cards/NumericalDetection.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(42, ValueProp.Move),
-        new BlockVar(42m, ValueProp.Move)
+        new DamageVar(36, ValueProp.Move),
+        new DynamicVar("DamagePerSluggish", 5)
     ];
 
-    public DontWantToWork() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
+    public NumericalDetection() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
@@ -40,20 +40,21 @@ public sealed class DontWantToWork : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        if (!SluggishStunLimiterPower.IsStunned(Owner.Creature))
-        {
-            return;
-        }
+        decimal sluggishStacks = cardPlay.Target.Powers
+            .OfType<SluggishPower>()
+            .Where(power => power.Amount > 0)
+            .Sum(power => power.Amount);
+        decimal totalDamage = DynamicVars.Damage.BaseValue +
+                              sluggishStacks * DynamicVars["DamagePerSluggish"].BaseValue;
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+        await DamageCmd.Attack(totalDamage)
             .FromCard(this)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
-        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
     }
 
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
+        DynamicVars.Damage.UpgradeValueBy(6);
     }
 }

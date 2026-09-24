@@ -41,13 +41,10 @@ public sealed class LearningUpgrade : ModCardTemplate
     {
         if (HasLearnedThisCombat)
         {
-            foreach (Creature enemy in CombatState?.HittableEnemies ?? [])
-            {
-                await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                    .FromCard(this)
-                    .Targeting(enemy)
-                    .Execute(choiceContext);
-            }
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+                .FromCard(this)
+                .TargetingAllOpponents(CombatState!)
+                .Execute(choiceContext);
 
             return;
         }

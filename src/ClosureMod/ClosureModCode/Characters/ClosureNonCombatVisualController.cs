@@ -1,6 +1,6 @@
 using Godot;
-using System.Collections.Generic;
 using MegaCrit.Sts2.Core.Bindings.MegaSpine;
+using MegaCrit.Sts2.Core.Helpers;
 
 namespace ClosureMod.Characters;
 
@@ -15,19 +15,23 @@ public partial class ClosureNonCombatVisualController : Node2D
 
     public override void _Ready()
     {
+        CallDeferred(nameof(InstallIdleVisualDeferred));
+    }
+
+    private void InstallIdleVisualDeferred()
+    {
         InstallIdleVisual(this);
     }
 
     internal static void InstallIdleVisual(Node root)
     {
-        if (root.FindChild("SpineIdleVisuals", true, false) is not null)
-        {
-            return;
-        }
-
+        Node2D? existingSpine = FindSpineSprite(root);
         Node2D? fallback = root.FindChild("Visuals", true, false) as Node2D;
-        if (fallback is null)
+
+        if (existingSpine is not null)
         {
+            HideStaticVisuals(root);
+            PlayIdleWhenReady(root, existingSpine);
             return;
         }
 
@@ -58,20 +62,52 @@ public partial class ClosureNonCombatVisualController : Node2D
 
             Node2D spineBody = (Node2D)ClassDB.Instantiate("SpineSprite").AsGodotObject();
             spineBody.Name = "SpineIdleVisuals";
-            spineBody.Position = fallback.Position;
+            spineBody.Position = fallback?.Position ?? new Vector2(0f, -96f);
             spineBody.Scale = new Vector2(ModelScale, ModelScale);
             spineBody.Call("set_skeleton_data_res", skeletonData);
-            new MegaSprite(spineBody).GetAnimationState().SetAnimation("Idle", true, 0);
 
-            Node fallbackParent = fallback.GetParent();
-            fallbackParent.AddChild(spineBody);
-            fallbackParent.MoveChild(spineBody, fallback.GetIndex());
-            fallback.Visible = false;
+            Node parent = fallback?.GetParent() ?? root;
+            parent.AddChild(spineBody);
+            parent.MoveChild(spineBody, 0);
+            HideStaticVisuals(root);
+            PlayIdleWhenReady(parent, spineBody);
         }
         catch (Exception ex)
         {
             Entry.Logger.Warn($"[Animation] Using static non-combat Closure visuals: {ex}");
         }
+    }
+
+    private static Node2D? FindSpineSprite(Node root)
+    {
+        foreach (Node node in root.GetChildren())
+        {
+            if (node is Node2D node2D && node.GetClass() == "SpineSprite")
+            {
+                return node2D;
+            }
+        }
+
+        return root.FindChild("SpineIdleVisuals", true, false) as Node2D;
+    }
+
+    private static void HideStaticVisuals(Node root)
+    {
+        foreach (Node node in root.GetChildren())
+        {
+            if (node is Sprite2D sprite && node.GetClass() != "SpineSprite")
+            {
+                sprite.Visible = false;
+            }
+        }
+    }
+
+    private static void PlayIdleWhenReady(Node host, Node2D spineBody)
+    {
+        SpineNodeExtensions.RunWhenSpineReady(
+            host,
+            new MegaSprite(spineBody),
+            state => state.SetAnimation("Idle", true, 0));
     }
 
     private static Resource LoadSpineFileResource(string className, string loadMethod, string path)

@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -13,12 +14,12 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
-[RegisterCard(typeof(ClosureModCardPool))]
+[RegisterCard(typeof(EventCardPool))]
 public sealed class DrawGame : ModCardTemplate
 {
     private const int BaseEnergyCost = 0;
     private const CardType CardKind = CardType.Attack;
-    private const CardRarity CardRarityValue = CardRarity.Rare;
+    private const CardRarity CardRarityValue = CardRarity.Event;
     private const TargetType CardTarget = TargetType.AllEnemies;
     private const bool ShowInCardLibrary = true;
     private const int DamagePerExhaustedCard = 5;

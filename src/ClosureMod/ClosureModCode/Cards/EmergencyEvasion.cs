@@ -1,6 +1,6 @@
 using ClosureMod.Characters;
 using ClosureMod.Keywords;
-using ClosureMod.Summons;
+using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -12,49 +12,49 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class EnhancedDefenseModule : ModCardTemplate
+public sealed class EmergencyEvasion : ModCardTemplate
 {
-    private const int BaseEnergyCost = 3;
+    private const int BaseEnergyCost = 0;
     private const CardType CardKind = CardType.Skill;
-    private const CardRarity CardRarityValue = CardRarity.Rare;
+    private const CardRarity CardRarityValue = CardRarity.Uncommon;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
+    protected override bool HasEnergyCostX => true;
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish, ClosureKeywords.Block];
+
     public override bool GainsBlock => true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Block];
-
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/EnhancedDefenseModule.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/SluggishGuard.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DynamicVar("ModuleHp", 5),
-        new BlockVar(2m, ValueProp.Move),
-        new DynamicVar("Hits", 6)
+        new BlockVar(10m, ValueProp.Move)
     ];
 
-    public EnhancedDefenseModule() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
+    public EmergencyEvasion() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await DroneSwarmManager.Summon(
-            choiceContext,
-            Owner,
-            DroneModuleKind.Defense,
-            (int)DynamicVars["ModuleHp"].BaseValue,
-            this);
-
-        for (int i = 0; i < (int)DynamicVars["Hits"].BaseValue; i++)
+        int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
+        for (int i = 0; i < repeatCount; i++)
         {
             await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
+            await PowerCmd.Apply<SluggishPower>(
+                choiceContext,
+                Owner.Creature,
+                1,
+                Owner.Creature,
+                this);
         }
     }
 
     protected override void OnUpgrade()
     {
-        EnergyCost.SetCustomBaseCost(2);
+        DynamicVars.Block.UpgradeValueBy(3m);
     }
 }

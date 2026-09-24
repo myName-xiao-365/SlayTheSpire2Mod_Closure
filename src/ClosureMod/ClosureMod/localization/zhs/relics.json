@@ -15,7 +15,7 @@
   "CLOSURE_MOD_RELIC_GIFT_CARD.description": "商店商品更容易打折。",
   "CLOSURE_MOD_RELIC_GIFT_CARD.flavor": "真正优秀的顾客，总能找到下一次促销的理由。",
   "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.title": "结构性原理",
-  "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.description": "每场战斗仅一次，护盾可格挡超额伤害。",
+  "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.description": "每场战斗仅一次，护盾可[gold]格挡[/gold]超额伤害。",
   "CLOSURE_MOD_RELIC_STRUCTURAL_PRINCIPLE.flavor": "能源耗尽前，将万物载离蛮荒。",
   "CLOSURE_MOD_RELIC_SNIPER_SCOPE.title": "狙击镜",
   "CLOSURE_MOD_RELIC_SNIPER_SCOPE.description": "每回合开始，本场战斗造成的伤害提高10%。",

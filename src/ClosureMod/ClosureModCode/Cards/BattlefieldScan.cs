@@ -42,15 +42,21 @@ public sealed class BattlefieldScan : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
+        if (repeatCount == 0 || CombatState?.HittableEnemies.Any() != true)
+        {
+            return;
+        }
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .WithHitCount(repeatCount)
+            .FromCard(this)
+            .TargetingAllOpponents(CombatState)
+            .Execute(choiceContext);
+
         for (int i = 0; i < repeatCount; i++)
         {
             foreach (Creature enemy in CombatState?.HittableEnemies.ToList() ?? [])
             {
-                await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                    .FromCard(this)
-                    .Targeting(enemy)
-                    .Execute(choiceContext);
-
                 if (!enemy.IsDead)
                 {
                     await PowerCmd.Apply<SluggishPower>(

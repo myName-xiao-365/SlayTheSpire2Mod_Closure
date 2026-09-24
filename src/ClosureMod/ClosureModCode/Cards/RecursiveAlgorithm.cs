@@ -1,7 +1,7 @@
 using ClosureMod.Characters;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -18,6 +18,7 @@ public sealed class RecursiveAlgorithm : ModCardTemplate
     private const CardRarity CardRarityValue = CardRarity.Uncommon;
     private const TargetType CardTarget = TargetType.RandomEnemy;
     private const bool ShowInCardLibrary = true;
+    private int _currentHitBonus;
 
     protected override bool HasEnergyCostX => true;
 
@@ -26,7 +27,11 @@ public sealed class RecursiveAlgorithm : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(9, ValueProp.Move)
+        new DamageVar(9, ValueProp.Move),
+        new CalculationBaseVar(0),
+        new ExtraDamageVar(1),
+        new CalculatedDamageVar(ValueProp.Move).WithMultiplier(
+            (card, _) => card.DynamicVars.Damage.BaseValue + ((RecursiveAlgorithm)card)._currentHitBonus)
     ];
 
     public RecursiveAlgorithm() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
@@ -36,19 +41,29 @@ public sealed class RecursiveAlgorithm : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         int hitCount = Math.Max(0, EnergyCost.CapturedXValue);
-        for (int i = 0; i < hitCount; i++)
+        if (hitCount == 0 || CombatState?.HittableEnemies.Any() != true)
         {
-            Creature? target = Owner.RunState.Rng.CombatTargets.NextItem(
-                CombatState?.HittableEnemies.ToList() ?? []);
-            if (target is null)
-            {
-                return;
-            }
+            return;
+        }
 
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue + i)
-                .FromCard(this)
-                .Targeting(target)
-                .Execute(choiceContext);
+        _currentHitBonus = 0;
+        int nextHit = 0;
+        AttackCommand attack = DamageCmd.Attack(DynamicVars.CalculatedDamage)
+            .WithHitCount(hitCount)
+            .FromCard(this)
+            .TargetingRandomOpponents(CombatState, true);
+        attack.BeforeDamage(() =>
+        {
+            _currentHitBonus = nextHit++;
+            return Task.CompletedTask;
+        });
+        try
+        {
+            await attack.Execute(choiceContext);
+        }
+        finally
+        {
+            _currentHitBonus = 0;
         }
     }
 
