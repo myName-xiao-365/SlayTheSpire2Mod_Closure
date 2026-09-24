@@ -5,6 +5,12 @@
   "CLOSURE_MOD_POWER_SLUGGISH_POWER.title": "迟钝",
   "CLOSURE_MOD_POWER_SLUGGISH_POWER.description": "每层[gold]迟钝[/gold]使该生物造成的伤害降低5%。达到10层时，消耗并进入眩晕。敌人每获得1层[gold]迟钝[/gold]，随机减少1层增益。",
   "CLOSURE_MOD_POWER_SLUGGISH_POWER.smartDescription": "每层[gold]迟钝[/gold]使该生物造成的伤害降低[blue]5%[/blue]。达到[blue]10[/blue]层时，消耗并进入眩晕。敌人每获得[blue]1[/blue]层[gold]迟钝[/gold]，随机减少[blue]1[/blue]层增益。",
+  "CLOSURE_MOD_POWER_SHIVER_POWER.title": "战栗",
+  "CLOSURE_MOD_POWER_SHIVER_POWER.description": "战栗的生物本回合的攻击失效。",
+  "CLOSURE_MOD_POWER_SHIVER_POWER.smartDescription": "战栗的生物本回合的攻击失效。",
+  "CLOSURE_MOD_POWER_PARALYSIS_POWER.title": "麻痹",
+  "CLOSURE_MOD_POWER_PARALYSIS_POWER.description": "麻痹的生物下一次攻击失效，每次攻击消耗1层麻痹。最多叠加3层。",
+  "CLOSURE_MOD_POWER_PARALYSIS_POWER.smartDescription": "麻痹的生物下一次攻击失效，每次攻击消耗[blue]1[/blue]层麻痹。最多叠加[blue]3[/blue]层。",
   "CLOSURE_MOD_POWER_DELAYED_SLUGGISH_STUN_POWER.title": "眩晕预备",
   "CLOSURE_MOD_POWER_DELAYED_SLUGGISH_STUN_POWER.description": "下回合开始时进入眩晕。",
   "CLOSURE_MOD_POWER_DELAYED_SLUGGISH_STUN_POWER.smartDescription": "下回合开始时进入眩晕。",
@@ -52,5 +58,8 @@
   "CLOSURE_MOD_POWER_SCHEDULE_ADJUSTMENT_POWER.smartDescription": "下回合开始时，获得 [blue]{Amount}[/blue] 点[img]res://ClosureMod/images/characters/energy_text.png[/img]。",
   "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.title": "无人机群",
   "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.description": "已部署 {Amount} 个模块。攻击模块会在攻击命中后追加伤害；防御模块会在获得[gold]格挡[/gold]后追加[gold]格挡[/gold]；后援模块会在生命减少后回复生命。",
-  "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.smartDescription": "已部署 [blue]{Amount}[/blue] 个模块。攻击模块会在攻击命中后追加伤害；防御模块会在获得[gold]格挡[/gold]后追加[gold]格挡[/gold]；后援模块会在生命减少后回复生命。"
+  "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.smartDescription": "已部署 [blue]{Amount}[/blue] 个模块。攻击模块会在攻击命中后追加伤害；防御模块会在获得[gold]格挡[/gold]后追加[gold]格挡[/gold]；后援模块会在生命减少后回复生命。",
+  "CLOSURE_MOD_POWER_EMBER_POWER.title": "余烬",
+  "CLOSURE_MOD_POWER_EMBER_POWER.description": "生命值不会低于 1。无法恢复生命值。时限结束时强制退出战场。",
+  "CLOSURE_MOD_POWER_EMBER_POWER.smartDescription": "生命值不会低于 [blue]1[/blue]。无法恢复生命值。时限结束时强制退出战场。"
 }

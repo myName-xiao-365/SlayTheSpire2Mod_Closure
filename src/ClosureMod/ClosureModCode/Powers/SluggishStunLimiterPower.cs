@@ -22,8 +22,8 @@ public sealed class SluggishStunLimiterPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://images/atlases/power_atlas.sprites/ringing_power.tres",
-        BigIconPath: "res://images/atlases/power_atlas.sprites/ringing_power.tres");
+        IconPath: $"{Entry.ResPath}/images/powers/StunPower.png",
+        BigIconPath: $"{Entry.ResPath}/images/powers/StunPower.png");
 
     public bool BlocksCardPlay => CombatManager.Instance.History.CardPlaysFinished.Count(entry =>
         entry.HappenedThisTurn(CombatState) &&

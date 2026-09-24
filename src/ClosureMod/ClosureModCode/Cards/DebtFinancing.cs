@@ -40,7 +40,7 @@ public sealed class DebtFinancing : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int cardsToDraw = Math.Max(0, EnergyCost.CapturedXValue + (int)DynamicVars["DrawOffset"].BaseValue);
+        int cardsToDraw = Math.Max(0, ResolveEnergyXValue() + (int)DynamicVars["DrawOffset"].BaseValue);
         if (cardsToDraw <= 0)
         {
             return;

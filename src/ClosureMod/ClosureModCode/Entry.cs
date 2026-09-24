@@ -1,8 +1,10 @@
 using System.Reflection;
 using HarmonyLib;
+using ClosureMod.Characters;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
+using STS2RitsuLib.Content;
 using STS2RitsuLib.Interop;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 
@@ -34,9 +36,19 @@ public partial class Entry
         // 新增内容类后，只要 attribute 写对，通常不需要在入口里手动逐个注册。
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
 
+        ModContentRegistry.For(ModId).RegisterCardLibraryCompendiumSharedPoolFilter<ClosureSupportCardPool>(
+            "SUPPORT",
+            $"{ResPath}/images/card_pools/support.png",
+            [
+                new CardLibraryCompendiumPlacementRule
+                {
+                    VanillaFilterAnchorUniqueName = "ColorlessPool",
+                    Relation = CardLibraryCompendiumFilterInsertRelation.Before
+                }
+            ]);
+
         new Harmony(ModId).PatchAll(assembly);
 
         Logger.Info("ClosureMod initialized.");
     }
 }
-

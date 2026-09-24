@@ -33,7 +33,7 @@ public sealed class LimitedRebate : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int energyGain = EnergyCost.CapturedXValue * 2 + (IsUpgraded ? 1 : 0);
+        int energyGain = ResolveEnergyXValue() * 2 + (IsUpgraded ? 1 : 0);
         if (energyGain > 0)
         {
             await PlayerCmd.GainEnergy(energyGain, Owner);

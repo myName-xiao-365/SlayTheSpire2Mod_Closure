@@ -40,7 +40,7 @@ public sealed class Gift : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
+        int repeatCount = Math.Max(0, _autoPlayInProgress ? EnergyCost.CapturedXValue : ResolveEnergyXValue());
         if (repeatCount == 0 || CombatState?.HittableEnemies.Any() != true)
         {
             return;
@@ -68,7 +68,7 @@ public sealed class Gift : ModCardTemplate
         _autoPlayInProgress = true;
         try
         {
-            EnergyCost.CapturedXValue = Math.Max(0, playedCard.EnergyCost.CapturedXValue);
+            EnergyCost.CapturedXValue = Math.Max(0, playedCard.ResolveEnergyXValue());
             await CardCmd.AutoPlay(
                 choiceContext,
                 this,

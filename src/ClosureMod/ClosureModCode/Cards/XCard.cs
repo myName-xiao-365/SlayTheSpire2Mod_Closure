@@ -119,6 +119,7 @@ public sealed class XCard : ModCardTemplate
     {
         return card.EnergyCost.CostsX &&
             card.Type is not CardType.Status and not CardType.Curse &&
+            card.Pool is not ClosureSupportCardPool &&
             card.GetType() != typeof(XCard);
     }
 

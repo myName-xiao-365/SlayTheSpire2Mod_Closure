@@ -48,7 +48,7 @@ public sealed class FaultDetection : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
+        int repeatCount = Math.Max(0, ResolveEnergyXValue());
         if (repeatCount == 0)
         {
             return;

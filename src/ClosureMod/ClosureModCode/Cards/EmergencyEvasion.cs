@@ -40,7 +40,7 @@ public sealed class EmergencyEvasion : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
+        int repeatCount = Math.Max(0, ResolveEnergyXValue());
         for (int i = 0; i < repeatCount; i++)
         {
             await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);

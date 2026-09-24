@@ -40,7 +40,7 @@ public sealed class RecursiveAlgorithm : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int hitCount = Math.Max(0, EnergyCost.CapturedXValue);
+        int hitCount = Math.Max(0, ResolveEnergyXValue());
         if (hitCount == 0 || CombatState?.HittableEnemies.Any() != true)
         {
             return;

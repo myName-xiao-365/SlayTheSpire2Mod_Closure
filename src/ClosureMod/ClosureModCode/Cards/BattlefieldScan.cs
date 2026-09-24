@@ -41,7 +41,7 @@ public sealed class BattlefieldScan : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int repeatCount = Math.Max(0, EnergyCost.CapturedXValue);
+        int repeatCount = Math.Max(0, ResolveEnergyXValue());
         if (repeatCount == 0 || CombatState?.HittableEnemies.Any() != true)
         {
             return;

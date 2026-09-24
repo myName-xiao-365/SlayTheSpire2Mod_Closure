@@ -43,7 +43,7 @@ public sealed class Overload : ModCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        int hitCount = Math.Max(0, EnergyCost.CapturedXValue);
+        int hitCount = Math.Max(0, ResolveEnergyXValue());
         if (hitCount == 0)
         {
             return;

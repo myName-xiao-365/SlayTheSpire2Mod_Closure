@@ -5,6 +5,12 @@
   "CLOSURE_MOD_POWER_SLUGGISH_POWER.title": "Sluggish",
   "CLOSURE_MOD_POWER_SLUGGISH_POWER.description": "Each stack lowers attack damage dealt by 5%. At 10 stacks, enemies lose 10 Sluggish and become Stunned; the player clears Sluggish and becomes Stunned this turn.",
   "CLOSURE_MOD_POWER_SLUGGISH_POWER.smartDescription": "Each stack lowers attack damage dealt by [blue]5%[/blue]. At [blue]10[/blue] stacks, enemies lose [blue]10[/blue] Sluggish and become Stunned; the player clears Sluggish and becomes Stunned this turn.",
+  "CLOSURE_MOD_POWER_SHIVER_POWER.title": "Shiver",
+  "CLOSURE_MOD_POWER_SHIVER_POWER.description": "This creature's attacks fail this turn.",
+  "CLOSURE_MOD_POWER_SHIVER_POWER.smartDescription": "This creature's attacks fail this turn.",
+  "CLOSURE_MOD_POWER_PARALYSIS_POWER.title": "Paralysis",
+  "CLOSURE_MOD_POWER_PARALYSIS_POWER.description": "The next attack fails and consumes 1 Paralysis. Stacks up to 3.",
+  "CLOSURE_MOD_POWER_PARALYSIS_POWER.smartDescription": "The next attack fails and consumes [blue]1[/blue] Paralysis. Stacks up to [blue]3[/blue].",
   "CLOSURE_MOD_POWER_DELAYED_SLUGGISH_STUN_POWER.title": "Stun Pending",
   "CLOSURE_MOD_POWER_DELAYED_SLUGGISH_STUN_POWER.description": "Become Stunned at the start of next turn.",
   "CLOSURE_MOD_POWER_DELAYED_SLUGGISH_STUN_POWER.smartDescription": "Become Stunned at the start of next turn.",
@@ -52,5 +58,8 @@
   "CLOSURE_MOD_POWER_SCHEDULE_ADJUSTMENT_POWER.smartDescription": "At the start of next turn, gain [blue]{Amount}[/blue] Energy.",
   "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.title": "Drone Swarm",
   "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.description": "{Amount} module(s) deployed. Attack Module adds damage after attacks hit. Defense Module adds Block after you gain Block. Support Module heals after you lose HP.",
-  "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.smartDescription": "[blue]{Amount}[/blue] module(s) deployed. Attack Module adds damage after attacks hit. Defense Module adds Block after you gain Block. Support Module heals after you lose HP."
+  "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.smartDescription": "[blue]{Amount}[/blue] module(s) deployed. Attack Module adds damage after attacks hit. Defense Module adds Block after you gain Block. Support Module heals after you lose HP.",
+  "CLOSURE_MOD_POWER_EMBER_POWER.title": "Ember",
+  "CLOSURE_MOD_POWER_EMBER_POWER.description": "Your HP cannot fall below 1. You cannot regain HP. Leave combat when the duration expires.",
+  "CLOSURE_MOD_POWER_EMBER_POWER.smartDescription": "Your HP cannot fall below [blue]1[/blue]. You cannot regain HP. Leave combat when the duration expires."
 }

@@ -3,9 +3,11 @@ using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -28,8 +30,6 @@ public sealed class TimelyRescue : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/TimelyRescue.png");
 
-    private bool _putIntoHandAfterPlay;
-
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new BlockVar(15m, ValueProp.Move)
@@ -42,24 +42,23 @@ public sealed class TimelyRescue : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-
-        _putIntoHandAfterPlay = SluggishStunLimiterPower.IsStunned(Owner.Creature);
     }
 
-    public override async Task AfterCardChangedPilesLate(
-        CardModel card,
-        PileType previousPileType,
-        AbstractModel? source)
+    public override async Task AfterPowerAmountChanged(
+        PlayerChoiceContext choiceContext,
+        PowerModel power,
+        decimal amount,
+        Creature? applier,
+        CardModel? cardSource)
     {
-        if (!_putIntoHandAfterPlay ||
-            !ReferenceEquals(card, this) ||
-            previousPileType != PileType.Play ||
-            Pile?.Type == PileType.Hand)
+        if (amount <= 0 ||
+            !ReferenceEquals(power.Owner, Owner.Creature) ||
+            power is not (SluggishStunLimiterPower or RingingPower) ||
+            Pile?.Type is not (PileType.Draw or PileType.Discard or PileType.Exhaust))
         {
             return;
         }
 
-        _putIntoHandAfterPlay = false;
         await CardPileCmd.Add(this, PileType.Hand, CardPilePosition.Top, this, false);
     }
 
