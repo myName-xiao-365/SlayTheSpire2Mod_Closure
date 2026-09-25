@@ -1,4 +1,3 @@
-# Build outputs and IDE state
 bin/
 obj/
 .vs/
@@ -7,42 +6,10 @@ obj/
 *.DotSettings
 *.DotSettings.user
 
-# Local machine configuration
 local.props
-*.tmp
-*.log
-
-# Godot generated import metadata/cache
 *.uid
 *.import
-
-# Local backups and scratch files
-_backup*/
-_card_contact*.png
-
-# Local source/reference art that is processed into src/ClosureMod assets
-/卡面/
-/新增卡面/
-/new card/
-/gift/
-/models/
-/动作/
-/assets/
-/docs/
-/bskill_tra_closure.png
-/初始遗物.png
-/立绘_*.png
-/费用*
-/迟钝*
-/可露希尔-*.webm
-/CLOSURE_CHARACTER_DESIGN.md
-/RESEARCH.md
-/BUILD_NOTES.md
-
-# Third-party checkouts kept locally for reference
-vendor/
-
-# Local tool/runtime downloads
-tools/
-/.codex-tools/
-/问题汇报.txt
+*.tmp
+*.log
+*.pck
+dist/
