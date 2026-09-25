@@ -49,5 +49,11 @@
   "CLOSURE_MOD_POWER_RANDOM_PROMOTION_POWER.smartDescription": "回合开始时，将手牌中随机一张普通支援牌精二。",
   "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.title": "未知领域",
   "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.description": "耗能为X的牌效果数值增加 {Amount} 点。",
-  "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.smartDescription": "耗能为X的牌效果数值增加 [blue]{Amount}[/blue] 点。"
+  "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.smartDescription": "耗能为X的牌效果数值增加 [blue]{Amount}[/blue] 点。",
+  "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.title": "安全感",
+  "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.description": "每次打出支援牌时，获得 {Amount} 点[gold]格挡[/gold]。",
+  "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.smartDescription": "每次打出支援牌时，获得 [blue]{Amount}[/blue] 点[gold]格挡[/gold]。",
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.title": "钞能力",
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.description": "每回合开始时，选择至多 {Amount} 张牌变化为[gold]普通支援牌[/gold]。",
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.smartDescription": "每回合开始时，选择至多 [blue]{Amount}[/blue] 张牌变化为[gold]普通支援牌[/gold]。"
 }

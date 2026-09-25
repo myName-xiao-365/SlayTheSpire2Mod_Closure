@@ -7,7 +7,7 @@ namespace ClosureMod.Characters;
 public sealed class ClosureModCardPool : TypeListCardPoolModel
 {
     private static readonly Material? PoolFrameTintMaterial =
-        MaterialUtils.CreateRgbShaderMaterial(0.42f, 0.65f, 0.72f);
+        MaterialUtils.CreateRgbShaderMaterial(0.58f, 0.12f, 0.16f);
 
     // Title 和 EnergyColorName 是池子的稳定标识，不是玩家看到的角色名。
     // 自定义角色卡、遗物、药水池保持同一个 EnergyColorName，方便实验室和文本统一读取能量图标。
@@ -19,11 +19,10 @@ public sealed class ClosureModCardPool : TypeListCardPoolModel
     public override string? BigEnergyIconPath => $"{Entry.ResPath}/images/characters/energy.png";
     public override string? TextEnergyIconPath => $"{Entry.ResPath}/images/characters/energy_text.png";
 
-    public override Color DeckEntryCardColor => ClosureModCharacter.ThemeColor;
+    public override Color DeckEntryCardColor => new(0.58f, 0.12f, 0.16f);
     public override Color EnergyOutlineColor => new(0.08f, 0.18f, 0.24f);
     public override Material? PoolFrameMaterial => PoolFrameTintMaterial;
 
     // false 表示这是角色专属卡池，不是事件/状态那类无色卡池。
     public override bool IsColorless => false;
 }
-

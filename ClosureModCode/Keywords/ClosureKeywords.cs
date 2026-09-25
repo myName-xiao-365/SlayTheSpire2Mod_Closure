@@ -12,6 +12,8 @@ namespace ClosureMod.Keywords;
 [RegisterOwnedCardKeyword(nameof(Vulnerable))]
 [RegisterOwnedCardKeyword(nameof(Weak))]
 [RegisterOwnedCardKeyword(nameof(Artifact))]
+[RegisterOwnedCardKeyword(nameof(EliteTwo))]
+[RegisterOwnedCardKeyword(nameof(UpgradeAction))]
 public sealed class ClosureKeywords
 {
     public const string SluggishId = ArkKeywords.SluggishId;
@@ -21,6 +23,8 @@ public sealed class ClosureKeywords
     public const string VulnerableId = "CLOSURE_MOD_KEYWORD_VULNERABLE";
     public const string WeakId = "CLOSURE_MOD_KEYWORD_WEAK";
     public const string ArtifactId = "CLOSURE_MOD_KEYWORD_ARTIFACT";
+    public const string EliteTwoId = "CLOSURE_MOD_KEYWORD_ELITE_TWO";
+    public const string UpgradeActionId = "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION";
     public const string ShiverId = ArkKeywords.ShiverId;
     public const string ParalysisId = ArkKeywords.ParalysisId;
     public const string PoisonId = ArkKeywords.PoisonId;
@@ -46,6 +50,12 @@ public sealed class ClosureKeywords
 
     public static readonly CardKeyword Artifact =
         ModContentRegistry.GetQualifiedKeywordId(Entry.ModId, nameof(Artifact)).GetModCardKeyword();
+
+    public static readonly CardKeyword EliteTwo =
+        ModContentRegistry.GetQualifiedKeywordId(Entry.ModId, nameof(EliteTwo)).GetModCardKeyword();
+
+    public static readonly CardKeyword UpgradeAction =
+        ModContentRegistry.GetQualifiedKeywordId(Entry.ModId, nameof(UpgradeAction)).GetModCardKeyword();
 
     public static readonly CardKeyword Shiver = ArkKeywords.Shiver;
 

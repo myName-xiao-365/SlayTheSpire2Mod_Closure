@@ -9,29 +9,34 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class RandomPromotion : ModCardTemplate
+public sealed class CashAbility : ModCardTemplate
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => IsUpgraded ? [CardKeyword.Innate] : [];
+    protected override bool HasEnergyCostX => true;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.png");
 
-    public RandomPromotion() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self, showInCardLibrary: true)
+    public CashAbility() : base(0, CardType.Power, CardRarity.Rare, TargetType.Self, showInCardLibrary: true)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<RandomPromotionPower>(
+        int cardsPerTurn = Math.Max(0, ResolveEnergyXValue());
+        if (cardsPerTurn == 0)
+        {
+            return;
+        }
+
+        CashAbilityPower? power = await PowerCmd.Apply<CashAbilityPower>(
             choiceContext,
             Owner.Creature,
-            1,
+            cardsPerTurn,
             Owner.Creature,
             this);
-    }
-
-    protected override void OnUpgrade()
-    {
-        AddKeyword(CardKeyword.Innate);
+        if (power is not null)
+        {
+            power.UpgradeSupportCards |= IsUpgraded;
+        }
     }
 }

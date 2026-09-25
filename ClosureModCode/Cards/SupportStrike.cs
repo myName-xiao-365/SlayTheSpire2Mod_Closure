@@ -1,6 +1,7 @@
 using ArkBase.Api;
 using ClosureMod.Characters;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -17,6 +18,9 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(ClosureModCardPool))]
 public sealed class SupportStrike : ModCardTemplate
 {
+    public override CardAssetProfile AssetProfile => new(
+        PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.png");
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(8, ValueProp.Move)
@@ -40,15 +44,51 @@ public sealed class SupportStrike : ModCardTemplate
             return;
         }
 
-        List<CardModel> candidates = SupportCards.GetCards(CardRarity.Common).ToList();
-        if (candidates.Count == 0)
+        List<CardModel> options = PickRandom(
+                SupportCards.GetCards(CardRarity.Common),
+                3,
+                Owner.RunState.Rng.CombatCardGeneration)
+            .Select(card => combatState.CreateCard(card, Owner))
+            .ToList();
+        if (options.Count == 0)
         {
             return;
         }
 
-        int index = Owner.RunState.Rng.CombatCardGeneration.NextInt(candidates.Count);
-        CardModel generatedCard = combatState.CreateCard(candidates[index], Owner);
-        if (IsUpgraded && generatedCard.IsUpgradable)
+        if (IsUpgraded)
+        {
+            foreach (CardModel option in options.Where(option => option.IsUpgradable))
+            {
+                CardCmd.Upgrade(option, CardPreviewStyle.None);
+            }
+        }
+
+        CardModel? selected;
+        try
+        {
+            selected = await CardSelectCmd.FromChooseACardScreen(
+                choiceContext,
+                options,
+                Owner,
+                canSkip: false);
+        }
+        finally
+        {
+            foreach (CardModel option in options)
+            {
+                combatState.RemoveCard(option);
+            }
+        }
+
+        if (selected is null || CombatManager.Instance.IsOverOrEnding || Owner.Creature.IsDead)
+        {
+            return;
+        }
+
+        bool shouldUpgrade = selected.IsUpgraded;
+        CardModel canonicalCard = selected.CanonicalInstance ?? selected;
+        CardModel generatedCard = combatState.CreateCard(canonicalCard, Owner);
+        if (shouldUpgrade && generatedCard.IsUpgradable)
         {
             CardCmd.Upgrade(generatedCard, CardPreviewStyle.None);
         }
@@ -59,6 +99,23 @@ public sealed class SupportStrike : ModCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3);
+    }
+
+    private static List<CardModel> PickRandom(
+        IReadOnlyList<CardModel> source,
+        int count,
+        MegaCrit.Sts2.Core.Random.Rng rng)
+    {
+        List<CardModel> remaining = source.ToList();
+        List<CardModel> picked = [];
+        while (picked.Count < count && remaining.Count > 0)
+        {
+            int index = rng.NextInt(remaining.Count);
+            picked.Add(remaining[index]);
+            remaining.RemoveAt(index);
+        }
+
+        return picked;
     }
 }
 

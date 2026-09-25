@@ -1,4 +1,8 @@
 {
   "CLOSURE_MOD_KEYWORD_DEBT.title": "Debt",
-  "CLOSURE_MOD_KEYWORD_DEBT.description": "At end of turn, gain 1 Debt for each negative Energy. At the start of next turn, lose that much Energy."
+  "CLOSURE_MOD_KEYWORD_DEBT.description": "At end of turn, gain 1 Debt for each negative Energy. At the start of next turn, lose that much Energy.",
+  "CLOSURE_MOD_KEYWORD_ELITE_TWO.title": "Elite Two",
+  "CLOSURE_MOD_KEYWORD_ELITE_TWO.description": "Transform a Support card into its Elite Two form while preserving its current upgrade state.",
+  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.title": "Upgrade",
+  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.description": "Turn a card into its upgraded form, strengthening its values or effects."
 }

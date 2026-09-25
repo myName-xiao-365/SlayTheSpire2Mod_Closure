@@ -10,5 +10,9 @@
   "CLOSURE_MOD_KEYWORD_ARTIFACT.title": "人工制品",
   "CLOSURE_MOD_KEYWORD_ARTIFACT.description": "免疫负面效果。",
   "CLOSURE_MOD_KEYWORD_OVERFLOW_DAMAGE.title": "溢出伤害",
-  "CLOSURE_MOD_KEYWORD_OVERFLOW_DAMAGE.description": "对目标造成的伤害超过其剩余生命值和[gold]格挡[/gold]时，超出的部分会弹射给随机的其他敌人。若没有其他目标，或此次伤害未造成实际损失，则停止弹射。"
+  "CLOSURE_MOD_KEYWORD_OVERFLOW_DAMAGE.description": "对目标造成的伤害超过其剩余生命值和[gold]格挡[/gold]时，超出的部分会弹射给随机的其他敌人。若没有其他目标，或此次伤害未造成实际损失，则停止弹射。",
+  "CLOSURE_MOD_KEYWORD_ELITE_TWO.title": "精二",
+  "CLOSURE_MOD_KEYWORD_ELITE_TWO.description": "将支援牌变化为对应的精二牌，并保留其当前的升级状态。",
+  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.title": "升级",
+  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.description": "将牌变为升级形态，强化该牌的数值或效果。"
 }

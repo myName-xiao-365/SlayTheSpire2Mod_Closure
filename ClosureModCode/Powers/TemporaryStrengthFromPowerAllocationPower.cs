@@ -10,7 +10,15 @@ namespace ClosureMod.Powers;
 public sealed class TemporaryStrengthFromPowerAllocationPower
     : ModTemporaryAppliedPowerTemplate<PowerAllocation, StrengthPower>
 {
-    public override PowerAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/characters/energy.png",
-        BigIconPath: $"{Entry.ResPath}/images/characters/energy.png");
+    public override PowerAssetProfile AssetProfile
+    {
+        get
+        {
+            string iconName = Amount < 0
+                ? "PowerAllocationStrengthDown.png"
+                : "PowerAllocationStrengthUp.png";
+            string iconPath = $"{Entry.ResPath}/images/powers/{iconName}";
+            return new PowerAssetProfile(IconPath: iconPath, BigIconPath: iconPath);
+        }
+    }
 }

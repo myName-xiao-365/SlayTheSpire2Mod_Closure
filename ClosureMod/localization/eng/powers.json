@@ -49,5 +49,11 @@
   "CLOSURE_MOD_POWER_RANDOM_PROMOTION_POWER.smartDescription": "At the start of your turn, randomly Elite Two a Common Support card in your hand.",
   "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.title": "Unknown Domain",
   "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.description": "Increase the effect value of X-cost cards by {Amount}.",
-  "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.smartDescription": "Increase the effect value of X-cost cards by [blue]{Amount}[/blue]."
+  "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.smartDescription": "Increase the effect value of X-cost cards by [blue]{Amount}[/blue].",
+  "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.title": "Sense of Security",
+  "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.description": "Whenever you play a Support card, gain {Amount} [gold]Block[/gold].",
+  "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.smartDescription": "Whenever you play a Support card, gain [blue]{Amount}[/blue] [gold]Block[/gold].",
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.title": "Money Talks",
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.description": "At the start of each turn, choose up to {Amount} cards to transform into [gold]Common Support[/gold] cards.",
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.smartDescription": "At the start of each turn, choose up to [blue]{Amount}[/blue] cards to transform into [gold]Common Support[/gold] cards."
 }
