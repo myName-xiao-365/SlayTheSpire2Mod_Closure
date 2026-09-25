@@ -3,6 +3,7 @@ using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -11,6 +12,9 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(ClosureModCardPool))]
 public sealed class UnknownDomain : ModCardTemplate
 {
+    public override CardAssetProfile AssetProfile => new(
+        PortraitPath: $"{Entry.ResPath}/images/cards/UnknownDomain.png");
+
     public UnknownDomain() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self, showInCardLibrary: true)
     {
     }
