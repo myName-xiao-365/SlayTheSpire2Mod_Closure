@@ -20,8 +20,8 @@ public sealed class SluggishGuardPower : ModPowerTemplate, ISluggishAppliedListe
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://ArkBase/images/powers/SluggishPower.png",
-        BigIconPath: "res://ArkBase/images/powers/SluggishPower.png");
+    IconPath: $"{Entry.ResPath}/images/powers/SluggishGuardPower.png",
+    BigIconPath: $"{Entry.ResPath}/images/powers/SluggishGuardPower.png");
 
     public async Task OnSluggishApplied(
         PlayerChoiceContext choiceContext,

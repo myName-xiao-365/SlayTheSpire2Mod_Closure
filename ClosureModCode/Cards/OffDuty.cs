@@ -16,11 +16,11 @@ public sealed class OffDuty : ModCardTemplate
 {
     private const int BaseEnergyCost = 1;
     private const CardType CardKind = CardType.Skill;
-    private const CardRarity CardRarityValue = CardRarity.Uncommon;
+    private const CardRarity CardRarityValue = CardRarity.Common;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Sluggish, ClosureKeywords.Block];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish, ClosureKeywords.Block];
     public override bool GainsBlock => true;
 
     public override CardAssetProfile AssetProfile => new(

@@ -8,10 +8,8 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
-using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -23,27 +21,15 @@ public sealed class FirstStep : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords =>
         IsUpgraded ? [ClosureKeywords.EliteTwo, ClosureKeywords.UpgradeAction] : [ClosureKeywords.EliteTwo];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new DamageVar(20, ValueProp.Move)
-    ];
-
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.png");
 
-    public FirstStep() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy, showInCardLibrary: true)
+    public FirstStep() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self, showInCardLibrary: true)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
-            .Targeting(cardPlay.Target)
-            .Execute(choiceContext);
-
         var hand = Owner.PlayerCombatState?.Hand;
         if (hand is null || !hand.Cards.Any(card => card.Rarity == CardRarity.Common && SupportCards.CanPromote(card)))
         {
@@ -85,10 +71,6 @@ public sealed class FirstStep : ModCardTemplate
         await CardPileCmd.Add(selectedCard, PileType.Exhaust, CardPilePosition.Top, this, false);
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(4);
-    }
 }
 
 [HarmonyPatch(typeof(CardModel), nameof(CardModel.Description), MethodType.Getter)]

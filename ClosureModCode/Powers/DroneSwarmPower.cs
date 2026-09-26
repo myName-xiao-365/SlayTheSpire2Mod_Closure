@@ -22,6 +22,7 @@ public sealed class DroneSwarmPower : ModPowerTemplate, IAttackHitHookListener
     protected override bool IsVisibleInternal => false;
 
     public bool HasAttackModule { get; set; }
+    public bool AttackModuleHitsAllEnemies { get; set; }
     public bool HasDefenseModule { get; set; }
     public bool HasSupportModule { get; set; }
     public bool WaitForStartupAdded { get; set; }
@@ -73,6 +74,7 @@ public sealed class DroneSwarmPower : ModPowerTemplate, IAttackHitHookListener
     public void ClearModules()
     {
         HasAttackModule = false;
+        AttackModuleHitsAllEnemies = false;
         HasDefenseModule = false;
         HasSupportModule = false;
         AttackModuleMaxHp = 0;
@@ -115,10 +117,12 @@ public sealed class DroneSwarmPower : ModPowerTemplate, IAttackHitHookListener
             return;
         }
 
-        List<Creature> targets = context.Targets
-            .Where(target => target is { IsAlive: true, IsEnemy: true })
+        List<Creature> targets = (AttackModuleHitsAllEnemies
+                ? Owner.CombatState?.HittableEnemies
+                : context.Targets)
+            ?.Where(target => target is { IsAlive: true, IsEnemy: true })
             .Distinct()
-            .ToList();
+            .ToList() ?? [];
         if (targets.Count <= 0)
         {
             return;

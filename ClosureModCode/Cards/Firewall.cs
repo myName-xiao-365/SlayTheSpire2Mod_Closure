@@ -5,53 +5,51 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace ClosureMod.Cards;
 
 [RegisterCard(typeof(ClosureModCardPool))]
-public sealed class StatusReset : ModCardTemplate
+public sealed class Firewall : ModCardTemplate
 {
     private const int BaseEnergyCost = 1;
     private const CardType CardKind = CardType.Skill;
-    private const CardRarity CardRarityValue = CardRarity.Uncommon;
+    private const CardRarity CardRarityValue = CardRarity.Common;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish, ClosureKeywords.Block];
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/StatusReset.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/Firewall.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DynamicVar("Draw", 3),
-        new DynamicVar("SluggishRemove", 1)
+        new DynamicVar("BlockPerSluggish", 3)
     ];
 
-    public StatusReset() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
+    public Firewall() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await CardPileCmd.Draw(choiceContext, (int)DynamicVars["Draw"].BaseValue, Owner);
-
-        SluggishPower? sluggish = Owner.Creature.Powers
+        int sluggish = Owner.Creature.Powers
             .OfType<SluggishPower>()
-            .FirstOrDefault(power => power.Amount > 0);
-        if (sluggish is null)
-        {
-            return;
-        }
+            .Where(power => power.Amount > 0)
+            .Sum(power => power.Amount);
+        int block = sluggish * (int)DynamicVars["BlockPerSluggish"].BaseValue;
 
-        decimal removeAmount = Math.Min(DynamicVars["SluggishRemove"].BaseValue, sluggish.Amount);
-        await PowerCmd.ModifyAmount(choiceContext, sluggish, -removeAmount, Owner.Creature, this);
+        if (block > 0)
+        {
+            await CreatureCmd.GainBlock(Owner.Creature, block, ValueProp.Unpowered, null);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Draw"].UpgradeValueBy(1);
+        DynamicVars["BlockPerSluggish"].UpgradeValueBy(1);
     }
 }

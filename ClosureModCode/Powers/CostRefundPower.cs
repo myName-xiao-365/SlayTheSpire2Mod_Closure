@@ -18,8 +18,8 @@ public sealed class CostRefundPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/characters/energy.png",
-        BigIconPath: $"{Entry.ResPath}/images/characters/energy.png");
+    IconPath: $"{Entry.ResPath}/images/powers/CostRefundPower.png",
+    BigIconPath: $"{Entry.ResPath}/images/powers/CostRefundPower.png");
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

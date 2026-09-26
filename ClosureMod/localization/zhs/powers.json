@@ -45,6 +45,9 @@
   "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.description": "已部署 {Amount} 个模块。攻击模块会在攻击命中后追加伤害；防御模块会在获得[gold]格挡[/gold]后追加[gold]格挡[/gold]；后援模块会在生命减少后回复生命。",
   "CLOSURE_MOD_POWER_DRONE_SWARM_POWER.smartDescription": "已部署 [blue]{Amount}[/blue] 个模块。攻击模块会在攻击命中后追加伤害；防御模块会在获得[gold]格挡[/gold]后追加[gold]格挡[/gold]；后援模块会在生命减少后回复生命。",
   "CLOSURE_MOD_POWER_RANDOM_PROMOTION_POWER.title": "随机直升",
+  "CLOSURE_MOD_POWER_NEXT_TURN_SUPPORT_PROMOTION_POWER.title": "先行一步",
+  "CLOSURE_MOD_POWER_NEXT_TURN_SUPPORT_PROMOTION_POWER.description": "下回合开始时，将选中的 {Amount} 张支援牌[gold]精二[/gold]后返回[gold]手牌[/gold]。由「先行一步+」选中的牌还会[gold]升级[/gold]。",
+  "CLOSURE_MOD_POWER_NEXT_TURN_SUPPORT_PROMOTION_POWER.smartDescription": "下回合开始时，将选中的 [blue]{Amount}[/blue] 张支援牌[gold]精二[/gold]后返回[gold]手牌[/gold]。由「先行一步+」选中的牌还会[gold]升级[/gold]。",
   "CLOSURE_MOD_POWER_RANDOM_PROMOTION_POWER.description": "回合开始时，将手牌中随机一张普通支援牌精二。",
   "CLOSURE_MOD_POWER_RANDOM_PROMOTION_POWER.smartDescription": "回合开始时，将手牌中随机一张普通支援牌精二。",
   "CLOSURE_MOD_POWER_X_COST_EFFECT_POWER.title": "未知领域",
@@ -55,5 +58,11 @@
   "CLOSURE_MOD_POWER_SENSE_OF_SECURITY_POWER.smartDescription": "每次打出支援牌时，获得 [blue]{Amount}[/blue] 点[gold]格挡[/gold]。",
   "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.title": "钞能力",
   "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.description": "每回合开始时，选择至多 {Amount} 张牌变化为[gold]普通支援牌[/gold]。",
-  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.smartDescription": "每回合开始时，选择至多 [blue]{Amount}[/blue] 张牌变化为[gold]普通支援牌[/gold]。"
+  "CLOSURE_MOD_POWER_CASH_ABILITY_POWER.smartDescription": "每回合开始时，选择至多 [blue]{Amount}[/blue] 张牌变化为[gold]普通支援牌[/gold]。",
+  "CLOSURE_MOD_POWER_BLOODFIEND_POWER.title": "血魔",
+  "CLOSURE_MOD_POWER_BLOODFIEND_POWER.description": "每回合开始时，手牌中的[gold]支援牌[/gold][img]res://ClosureMod/images/characters/energy_text.png[/img]-1。",
+  "CLOSURE_MOD_POWER_BLOODFIEND_POWER.smartDescription": "每回合开始时，手牌中的[gold]支援牌[/gold][img]res://ClosureMod/images/characters/energy_text.png[/img]-[blue]1[/blue]。",
+  "CLOSURE_MOD_POWER_FRIEND_POWER.title": "好友",
+  "CLOSURE_MOD_POWER_FRIEND_POWER.description": "每回合开始时，将一张随机普通支援牌放入你的手牌。",
+  "CLOSURE_MOD_POWER_FRIEND_POWER.smartDescription": "每回合开始时，将一张随机普通支援牌放入你的手牌。"
 }

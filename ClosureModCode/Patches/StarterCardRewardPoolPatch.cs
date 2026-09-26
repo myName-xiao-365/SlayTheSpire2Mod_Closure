@@ -18,6 +18,7 @@ internal static class NonRewardCardFilter
         return card is not ClearDebt
             and not HeavyStrike
             and not Settlement
+            and not Bloodfiend
             and not WaitForStartup
             and not IHaveStarted;
     }
@@ -32,10 +33,11 @@ internal static class StarterCardRewardPoolPatch
         UnlockState unlockState,
         CardMultiplayerConstraint multiplayerConstraint)
     {
-        // The library also reads this list; starter cards stay unlocked, while reward filters exclude them below.
+        // The library also reads this list; starter and ancient cards remain visible, while reward filters exclude them below.
         __result = __result
             .Where(card => __instance is not ClosureModCardPool
                 || card is HeavyStrike or ClearDebt
+                || card.Rarity == CardRarity.Ancient
                 || NonRewardCardFilter.IsAllowed(card))
             .ToList();
     }
