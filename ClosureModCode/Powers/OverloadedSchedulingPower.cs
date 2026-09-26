@@ -21,6 +21,11 @@ public sealed class OverloadedSchedulingPower : ModPowerTemplate
         IconPath: $"{Entry.ResPath}/images/powers/OverloadedSchedulingPower.png",
         BigIconPath: $"{Entry.ResPath}/images/powers/OverloadedSchedulingPower.png");
 
+    public override decimal ModifyMaxEnergy(Player player, decimal amount)
+    {
+        return ReferenceEquals(Owner, player.Creature) ? amount + Amount : amount;
+    }
+
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (!ReferenceEquals(Owner, player.Creature) || Amount <= 0)
@@ -29,7 +34,6 @@ public sealed class OverloadedSchedulingPower : ModPowerTemplate
         }
 
         Flash();
-        await PlayerCmd.GainEnergy(Amount, player);
         await PowerCmd.Apply<SluggishPower>(choiceContext, Owner, Amount, Owner, null);
     }
 }

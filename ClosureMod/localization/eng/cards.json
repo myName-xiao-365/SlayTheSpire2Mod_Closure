@@ -275,7 +275,7 @@
   "CLOSURE_MOD_CARD_CASH_ABILITY.title": "Money Talks",
   "CLOSURE_MOD_CARD_CASH_ABILITY.description": "At the start of each turn, choose up to X cards to transform into [gold]Common Support[/gold] cards.",
   "CLOSURE_MOD_CARD_CASH_ABILITY.smartDescription": "At the start of each turn, choose up to X cards to transform into [gold]Common Support[/gold] cards.",
-  "CLOSURE_MOD_CARD_CASH_ABILITY.descriptionUpgraded": "At the start of each turn, choose up to X cards to transform into [gold]Common Support+[/gold] cards.",
-  "CLOSURE_MOD_CARD_CASH_ABILITY.smartDescriptionUpgraded": "At the start of each turn, choose up to X cards to transform into [gold]Common Support+[/gold] cards.",
+  "CLOSURE_MOD_CARD_CASH_ABILITY.descriptionUpgraded": "At the start of each turn, choose up to X cards to transform into [green]upgraded[/green] [gold]Common Support[/gold] cards.",
+  "CLOSURE_MOD_CARD_CASH_ABILITY.smartDescriptionUpgraded": "At the start of each turn, choose up to X cards to transform into [green]upgraded[/green] [gold]Common Support[/gold] cards.",
   "CLOSURE_MOD_CARD_CASH_ABILITY.selectPrompt": "Choose cards to transform."
 }

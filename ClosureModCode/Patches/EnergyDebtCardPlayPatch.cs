@@ -1,5 +1,6 @@
 using System.Reflection;
 using ClosureMod.Cards;
+using ClosureMod.Characters;
 using ClosureMod.Powers;
 using ClosureMod.Relics;
 using Godot;
@@ -142,6 +143,11 @@ internal static class EnergyDebtCounterVisualPatch
         try
         {
             Player? player = PlayerField.GetValue(__instance) as Player;
+            if (player?.Character is not ClosureModCharacter)
+            {
+                return;
+            }
+
             int energy = player?.PlayerCombatState?.Energy ?? 0;
             int maxEnergyDebt = ClosureModRelic.GetMaxEnergyDebt(player);
             bool atDebtLimit = energy <= -maxEnergyDebt;
