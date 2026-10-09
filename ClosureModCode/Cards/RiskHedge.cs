@@ -19,7 +19,7 @@ public sealed class RiskHedge : ModCardTemplate
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Block];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Block, ClosureKeywords.Debt];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.png");

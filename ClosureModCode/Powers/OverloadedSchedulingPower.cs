@@ -1,4 +1,6 @@
 using ClosureMod.Keywords;
+using ClosureMod.Utils;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -15,7 +17,8 @@ public sealed class OverloadedSchedulingPower : ModPowerTemplate
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.SluggishId];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        RelatedPowerHoverTips.For<SluggishPower>(this, ClosureKeywords.SluggishId);
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"{Entry.ResPath}/images/powers/OverloadedSchedulingPower.png",

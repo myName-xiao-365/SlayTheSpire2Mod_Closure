@@ -14,6 +14,8 @@ namespace ClosureMod.Cards;
 [RegisterCard(typeof(ClosureModCardPool))]
 public sealed class Friend : ModCardTemplate
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords => IsUpgraded ? [CardKeyword.Innate] : [];
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/Friend.jpg");
 
@@ -23,16 +25,17 @@ public sealed class Friend : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        FriendPower? power = await PowerCmd.Apply<FriendPower>(
+        await PowerCmd.Apply<FriendPower>(
             choiceContext,
             Owner.Creature,
             1,
             Owner.Creature,
             this);
-        if (power is not null)
-        {
-            power.UpgradeGeneratedCards = IsUpgraded;
-        }
+    }
+
+    protected override void OnUpgrade()
+    {
+        AddKeyword(CardKeyword.Innate);
     }
 }
 

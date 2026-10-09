@@ -1,4 +1,6 @@
 using ClosureMod.Keywords;
+using ClosureMod.Utils;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -16,7 +18,8 @@ public sealed class TimelyFeedbackPower : ModPowerTemplate, IAttackHitHookListen
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.SluggishId];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        RelatedPowerHoverTips.For<SluggishPower>(this, ClosureKeywords.SluggishId);
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"{Entry.ResPath}/images/powers/TimelyFeedbackPower.png",

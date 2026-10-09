@@ -14,8 +14,6 @@ namespace ClosureMod.Powers;
 [RegisterPower]
 public sealed class FriendPower : ModPowerTemplate
 {
-    public bool UpgradeGeneratedCards { get; set; }
-
     public override PowerType Type => PowerType.Buff;
 
     public override PowerStackType StackType => PowerStackType.Single;
@@ -41,11 +39,6 @@ public sealed class FriendPower : ModPowerTemplate
         CardModel generatedCard = combatState.CreateCard(
             candidates[player.RunState.Rng.CombatCardGeneration.NextInt(candidates.Count)],
             player);
-        if (UpgradeGeneratedCards && generatedCard.IsUpgradable)
-        {
-            CardCmd.Upgrade(generatedCard, CardPreviewStyle.None);
-        }
-
         await CardPileCmd.AddGeneratedCardToCombat(generatedCard, PileType.Hand, player);
     }
 }

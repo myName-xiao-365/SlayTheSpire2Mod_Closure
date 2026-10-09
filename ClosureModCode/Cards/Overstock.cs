@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
@@ -24,6 +25,9 @@ public sealed class Overstock : ModCardTemplate
     protected override bool HasEnergyCostX => true;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromCard<DerivedCard>(IsUpgraded)];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/ForceBuySell.png");
@@ -63,10 +67,17 @@ public sealed class Overstock : ModCardTemplate
             CardPileAddResult? transformResult = await CardCmd.TransformTo<DerivedCard>(
                 selectedCard,
                 CardPreviewStyle.HorizontalLayout);
-            if (IsUpgraded && transformResult is { } result && result.cardAdded.IsUpgradable)
+            if (transformResult is not { } result)
+            {
+                continue;
+            }
+
+            if (IsUpgraded && result.cardAdded.IsUpgradable)
             {
                 CardCmd.Upgrade(result.cardAdded, CardPreviewStyle.HorizontalLayout);
             }
+
+            result.cardAdded.EnergyCost.SetThisTurn(0);
         }
     }
 }

@@ -1,4 +1,6 @@
 using ClosureMod.Keywords;
+using ClosureMod.Utils;
+using MegaCrit.Sts2.Core.HoverTips;
 using ClosureMod.Relics;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -19,7 +21,8 @@ public sealed class RiskHedgePower : ModPowerTemplate
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.DebtId];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        RelatedPowerHoverTips.For<EnergyDebtPower>(this, ClosureKeywords.DebtId);
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"{Entry.ResPath}/images/powers/RiskHedgePower.png",

@@ -1,6 +1,4 @@
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -43,27 +41,17 @@ public class ClosureModRelic : ModRelicTemplate
         IconOutlinePath: $"{Entry.ResPath}/images/relics/{GetType().Name}.png",
         BigIconPath: $"{Entry.ResPath}/images/relics/{GetType().Name}.png");
 
-    public static bool PlayerHasEnergyDebtRelic(Player player)
-    {
-        return player.Relics.Any(relic => relic is ClosureModRelic);
-    }
-
     public static int GetMaxEnergyDebt(Player? player = null)
     {
-        return GetBaseMaxEnergyDebt(player) + (player?.Creature.GetPowerAmount<CreditLimitExpansionPower>() ?? 0);
+        return player?.Creature.GetPowerAmount<CreditLimitExpansionPower>() ?? 0;
     }
 
-    private static int GetBaseMaxEnergyDebt(Player? player)
+    public static bool HasEnergyDebtLimit(Player player)
     {
-        if (player?.Relics.Any(relic => relic is AncientClosureModRelic) == true)
-        {
-            return AncientClosureModRelic.MaxEnergyDebt;
-        }
-
-        return MaxEnergyDebt;
+        return GetMaxEnergyDebt(player) > 0;
     }
 
-    private static int GetEndTurnDebtReduction(Player player)
+    public static int GetEndTurnDebtReduction(Player player)
     {
         return player.Relics.Any(relic => relic is AncientClosureModRelic)
             ? AncientClosureModRelic.EndTurnDebtReduction
@@ -74,7 +62,7 @@ public class ClosureModRelic : ModRelicTemplate
     {
         Player? owner = card.Owner;
         var combatState = owner?.PlayerCombatState;
-        if (owner is null || combatState is null || !PlayerHasEnergyDebtRelic(owner))
+        if (owner is null || combatState is null || !HasEnergyDebtLimit(owner))
         {
             return false;
         }
@@ -101,26 +89,18 @@ public class ClosureModRelic : ModRelicTemplate
             : roomTypes;
     }
 
-    public override async Task BeforeSideTurnEnd(
-        PlayerChoiceContext choiceContext,
-        CombatSide side,
-        IEnumerable<Creature> creatures)
+    public override async Task BeforeCombatStart()
     {
-        Player? owner = Owner;
-        var combatState = owner?.PlayerCombatState;
-        if (owner is null || combatState is null || side != CombatSide.Player)
+        if (Owner is not { } owner)
         {
             return;
         }
 
-        int debt = Math.Clamp(-combatState.Energy, 0, GetMaxEnergyDebt(owner));
-        debt = Math.Max(0, debt - GetEndTurnDebtReduction(owner));
-        if (debt <= 0)
-        {
-            return;
-        }
-
-        await PowerCmd.Apply<EnergyDebtPower>(choiceContext, owner.Creature, debt, owner.Creature, null);
+        int stacks = this is AncientClosureModRelic
+            ? AncientClosureModRelic.MaxEnergyDebt
+            : MaxEnergyDebt;
+        await PowerCmd.Apply<CreditLimitExpansionPower>(
+            new ThrowingPlayerChoiceContext(), owner.Creature, stacks, owner.Creature, null);
     }
 }
 

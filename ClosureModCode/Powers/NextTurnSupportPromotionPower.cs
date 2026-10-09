@@ -14,19 +14,19 @@ namespace ClosureMod.Powers;
 [RegisterPower]
 public sealed class NextTurnSupportPromotionPower : ModPowerTemplate
 {
-    private readonly List<(CardModel Card, bool UpgradePromotedCard)> _pendingCards = [];
+    private readonly List<(CardModel Card, PlayerCombatState CombatState, bool UpgradePromotedCard)> _pendingCards = [];
 
     public override PowerType Type => PowerType.Buff;
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/powers/RandomPromotionPower.png",
-        BigIconPath: $"{Entry.ResPath}/images/powers/RandomPromotionPower.png");
+        IconPath: $"{Entry.ResPath}/images/powers/NextTurnSupportPromotionPower.png",
+        BigIconPath: $"{Entry.ResPath}/images/powers/NextTurnSupportPromotionPower.png");
 
-    public void AddCard(CardModel card, bool upgradePromotedCard)
+    public void AddCard(CardModel card, PlayerCombatState combatState, bool upgradePromotedCard)
     {
-        _pendingCards.Add((card, upgradePromotedCard));
+        _pendingCards.Add((card, combatState, upgradePromotedCard));
     }
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -36,9 +36,10 @@ public sealed class NextTurnSupportPromotionPower : ModPowerTemplate
             return;
         }
 
-        foreach ((CardModel card, bool upgradePromotedCard) in _pendingCards.ToArray())
+        foreach ((CardModel card, PlayerCombatState combatState, bool upgradePromotedCard) in _pendingCards.ToArray())
         {
-            if (card.HasBeenRemovedFromState)
+            if (!ReferenceEquals(combatState, player.PlayerCombatState) ||
+                card.HasBeenRemovedFromState || card.Pile is null)
             {
                 continue;
             }

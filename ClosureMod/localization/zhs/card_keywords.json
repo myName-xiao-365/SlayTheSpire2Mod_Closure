@@ -14,5 +14,19 @@
   "CLOSURE_MOD_KEYWORD_ELITE_TWO.title": "精二",
   "CLOSURE_MOD_KEYWORD_ELITE_TWO.description": "将支援牌变化为对应的精二牌，并保留其当前的升级状态。",
   "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.title": "升级",
-  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.description": "将牌变为升级形态，强化该牌的数值或效果。"
+  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.description": "将牌变为升级形态，强化该牌的数值或效果。",
+  "CLOSURE_MOD_KEYWORD_ATTACK_MODULE.title": "攻击模块",
+  "CLOSURE_MOD_KEYWORD_ATTACK_MODULE.description": "造成伤害时，追加等同于攻击模块自身最大生命值的伤害。",
+  "CLOSURE_MOD_KEYWORD_DEFENSE_MODULE.title": "防御模块",
+  "CLOSURE_MOD_KEYWORD_DEFENSE_MODULE.description": "获得[gold]格挡[/gold]时，追加等同于防御模块自身最大生命值的[gold]格挡[/gold]。",
+  "CLOSURE_MOD_KEYWORD_SUPPORT_MODULE.title": "后援模块",
+  "CLOSURE_MOD_KEYWORD_SUPPORT_MODULE.description": "受到伤害时，回复等同于后援模块自身最大生命值的生命。",
+  "CLOSURE_MOD_KEYWORD_INHERIT.title": "继承",
+  "CLOSURE_MOD_KEYWORD_INHERIT.description": "由其他 X 牌触发而自动打出时，使用那张牌的 X 值结算效果，不再额外消耗能量。",
+  "CLOSURE_MOD_KEYWORD_STUN.title": "眩晕",
+  "CLOSURE_MOD_KEYWORD_STUN.description": "敌人在下一回合无法行动；角色在本回合只能打出1张牌。",
+  "CLOSURE_MOD_KEYWORD_DAZE.title": "昏眩",
+  "CLOSURE_MOD_KEYWORD_DAZE.description": "角色本回合只能打出1张牌。",
+  "CLOSURE_MOD_KEYWORD_HAND_RETAIN.title": "保留",
+  "CLOSURE_MOD_KEYWORD_HAND_RETAIN.description": "本回合结束时，你的手牌不会被丢弃。"
 }

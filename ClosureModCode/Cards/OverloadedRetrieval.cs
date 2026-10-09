@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -27,27 +28,33 @@ public sealed class OverloadedRetrieval : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DynamicVar("Draw", 1),
-        new DynamicVar("ExtraDrawPerSluggish", 1)
+        new DynamicVar("ExtraDrawPerSluggish", 1),
+        ModCardVars.Computed("TotalDraw", 1,
+            card => card is OverloadedRetrieval retrieval ? retrieval.CalculateDraw() : 1)
     ];
 
     public OverloadedRetrieval() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    private int CalculateDraw()
     {
-        int sluggishAmount = Owner.Creature.Powers
+        int sluggishAmount = (IsMutable ? Owner?.Creature : null)?.Powers
             .OfType<SluggishPower>()
             .Where(power => power.Amount > 0)
-            .Sum(power => (int)power.Amount);
-        int drawAmount = (int)DynamicVars["Draw"].BaseValue
+            .Sum(power => (int)power.Amount) ?? 0;
+        return (int)DynamicVars["Draw"].BaseValue
             + sluggishAmount * (int)DynamicVars["ExtraDrawPerSluggish"].BaseValue;
+    }
 
-        await CardPileCmd.Draw(choiceContext, drawAmount, Owner);
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        await CardPileCmd.Draw(choiceContext, CalculateDraw(), Owner);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars["Draw"].UpgradeValueBy(1);
+        DynamicVars["TotalDraw"].UpgradeValueBy(1);
     }
 }

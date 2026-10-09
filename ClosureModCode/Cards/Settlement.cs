@@ -21,7 +21,7 @@ public sealed class Settlement : ModCardTemplate
     private const bool ShowInCardLibrary = true;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        IsUpgraded ? [CardKeyword.Retain, ClosureKeywords.Sluggish] : [ClosureKeywords.Sluggish];
+        [CardKeyword.Retain, ClosureKeywords.Sluggish];
 
     public override bool CanBeGeneratedInCombat => false;
 
@@ -68,7 +68,6 @@ public sealed class Settlement : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
         DynamicVars.Damage.UpgradeValueBy(9);
         DynamicVars["Sluggish"].UpgradeValueBy(3);
     }

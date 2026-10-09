@@ -9,6 +9,7 @@ obj/
 local.props
 *.uid
 *.import
+!ClosureMod/voice/*.wav.import
 *.tmp
 *.log
 *.pck

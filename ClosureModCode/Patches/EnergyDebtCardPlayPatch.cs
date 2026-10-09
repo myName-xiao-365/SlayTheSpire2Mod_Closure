@@ -1,112 +1,65 @@
 using System.Reflection;
-using ClosureMod.Cards;
-using ClosureMod.Characters;
-using ClosureMod.Powers;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using ClosureMod.Relics;
-using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
-using MegaCrit.Sts2.Core.Helpers.Models;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Combat;
-using MegaCrit.Sts2.addons.mega_text;
 
 namespace ClosureMod.Patches;
 
-[HarmonyPatch(typeof(CardModel), nameof(CardModel.CanPlay), [])]
-internal static class EnergyDebtCanPlaySimplePatch
+internal static class EnergyDebtRules
 {
-    private static void Postfix(CardModel __instance, ref bool __result)
+    internal static readonly MethodInfo EnergyGetter =
+        AccessTools.PropertyGetter(typeof(PlayerCombatState), nameof(PlayerCombatState.Energy));
+    internal static readonly MethodInfo AvailableEnergyGetter =
+        AccessTools.Method(typeof(EnergyDebtRules), nameof(GetAvailableEnergy));
+
+    public static int GetAvailableEnergy(PlayerCombatState state)
     {
-        if (__result)
-        {
-            return;
-        }
-
-        if (SluggishStunLimiterPower.IsBlockedByStun(__instance))
-        {
-            return;
-        }
-
-        if (__instance is DontWantToWork && !SluggishStunLimiterPower.IsStunned(__instance))
-        {
-            return;
-        }
-
-        __result = ClosureModRelic.CanPlayWithEnergyDebt(__instance);
+        int limit = ClosureModRelic.GetMaxEnergyDebt(state._player);
+        return limit > 0 ? Math.Max(0, state.Energy + limit) : state.Energy;
     }
+
+    public static decimal GetMinimumEnergy(PlayerCombatState state) =>
+        -Math.Max(0, ClosureModRelic.GetMaxEnergyDebt(state._player));
 }
 
 [HarmonyPatch]
-internal static class EnergyDebtCanPlayPatch
+internal static class EnergyDebtResourcesPatch
 {
-    private static MethodBase TargetMethod()
+    private static IEnumerable<MethodBase> TargetMethods()
     {
-        return AccessTools.Method(
-            typeof(CardModel),
-            nameof(CardModel.CanPlay),
-            [
-                typeof(UnplayableReason).MakeByRefType(),
-                typeof(AbstractModel).MakeByRefType()
-            ]);
+        yield return AccessTools.Method(typeof(PlayerCombatState), nameof(PlayerCombatState.HasEnoughResourcesFor));
+        yield return AccessTools.Method(typeof(CardEnergyCost), nameof(CardEnergyCost.GetAmountToSpend));
+        MethodInfo spend = AccessTools.Method(typeof(CardModel), nameof(CardModel.SpendResources));
+        Type stateMachine = spend.GetCustomAttribute<AsyncStateMachineAttribute>()!.StateMachineType;
+        yield return AccessTools.Method(stateMachine, "MoveNext");
     }
 
-    private static void Postfix(
-        CardModel __instance,
-        ref bool __result,
-        ref UnplayableReason reason,
-        ref AbstractModel preventer)
+    private static IEnumerable<CodeInstruction> Transpiler(
+        IEnumerable<CodeInstruction> instructions, MethodBase __originalMethod)
     {
-        if (__result || reason != UnplayableReason.EnergyCostTooHigh)
+        int replaced = 0;
+        foreach (CodeInstruction instruction in instructions)
         {
-            return;
+            if (instruction.Calls(EnergyDebtRules.EnergyGetter))
+            {
+                // Native affordability, star payment, and X costs share the same available balance.
+                instruction.opcode = OpCodes.Call;
+                instruction.operand = EnergyDebtRules.AvailableEnergyGetter;
+                replaced++;
+            }
+
+            yield return instruction;
         }
 
-        if (SluggishStunLimiterPower.IsBlockedByStun(__instance))
+        int expected = __originalMethod.Name == nameof(PlayerCombatState.HasEnoughResourcesFor) ? 4 : 1;
+        if (replaced != expected)
         {
-            return;
-        }
-
-        if (__instance is DontWantToWork && !SluggishStunLimiterPower.IsStunned(__instance))
-        {
-            return;
-        }
-
-        if (!ClosureModRelic.CanPlayWithEnergyDebt(__instance))
-        {
-            return;
-        }
-
-        __result = true;
-        reason = UnplayableReason.None;
-        preventer = null!;
-    }
-}
-
-[HarmonyPatch(typeof(CardCostHelper), nameof(CardCostHelper.GetEnergyCostColor))]
-internal static class EnergyDebtCostColorPatch
-{
-    private static void Postfix(CardModel __0, ref CardCostColor __result)
-    {
-        if (__result != CardCostColor.InsufficientResources)
-        {
-            return;
-        }
-
-        if (SluggishStunLimiterPower.IsBlockedByStun(__0))
-        {
-            return;
-        }
-
-        if (__0 is DontWantToWork && !SluggishStunLimiterPower.IsStunned(__0))
-        {
-            return;
-        }
-
-        if (ClosureModRelic.CanPlayWithEnergyDebt(__0))
-        {
-            __result = CardCostColor.Unmodified;
+            throw new InvalidOperationException($"Energy debt patch: unexpected energy reads in {__originalMethod.Name}: {replaced}.");
         }
     }
 }
@@ -114,183 +67,36 @@ internal static class EnergyDebtCostColorPatch
 [HarmonyPatch]
 internal static class EnergyDebtCounterVisualPatch
 {
-    private static readonly FieldInfo PlayerField = AccessTools.Field(typeof(NEnergyCounter), "_player");
-    private static readonly FieldInfo LabelField = AccessTools.Field(typeof(NEnergyCounter), "_label");
-    private static readonly FieldInfo LayersField = AccessTools.Field(typeof(NEnergyCounter), "_layers");
-    private static readonly FieldInfo RotationLayersField = AccessTools.Field(typeof(NEnergyCounter), "_rotationLayers");
-    private static readonly FieldInfo BackVfxField = AccessTools.Field(typeof(NEnergyCounter), "_backVfx");
-    private static readonly FieldInfo FrontVfxField = AccessTools.Field(typeof(NEnergyCounter), "_frontVfx");
-    private static readonly StringName FontColorName = "font_color";
-    private static readonly StringName FontOutlineColorName = "font_outline_color";
-    private const string EnergyOrbPath = "res://ClosureMod/images/characters/energy.png";
-    private static readonly Color NormalLayerColor = Colors.White;
-    private static readonly Color DebtLimitLayerColor = new(0.52f, 0.52f, 0.52f, 1f);
-    private static readonly Color NormalFontColor = new(1f, 0.9647059f, 0.8862745f, 1f);
-    private static readonly Color DebtLimitFontColor = new(1f, 0.33f, 0.28f, 1f);
-    private static readonly Color OutlineColor = new(0.08f, 0.18f, 0.24f, 1f);
-    private static bool _loggedVisualException;
-
     private static IEnumerable<MethodBase> TargetMethods()
     {
-        yield return AccessTools.Method(typeof(NEnergyCounter), nameof(NEnergyCounter._Ready));
         yield return AccessTools.Method(typeof(NEnergyCounter), nameof(NEnergyCounter.RefreshLabel));
-        yield return AccessTools.Method(typeof(NEnergyCounter), "OnEnergyChanged");
         yield return AccessTools.Method(typeof(NEnergyCounter), nameof(NEnergyCounter._Process));
     }
 
-    private static void Postfix(NEnergyCounter __instance)
+    private static IEnumerable<CodeInstruction> Transpiler(
+        IEnumerable<CodeInstruction> instructions, MethodBase __originalMethod)
     {
-        try
+        bool refreshLabel = __originalMethod.Name == nameof(NEnergyCounter.RefreshLabel);
+        int energyReads = 0;
+        foreach (CodeInstruction instruction in instructions)
         {
-            Player? player = PlayerField.GetValue(__instance) as Player;
-            if (player?.Character is not ClosureModCharacter)
+            if (instruction.Calls(EnergyDebtRules.EnergyGetter))
             {
-                return;
+                energyReads++;
+                // The first read formats the actual signed balance; only visual state uses availability.
+                if (!refreshLabel || energyReads > 1)
+                {
+                    instruction.opcode = OpCodes.Call;
+                    instruction.operand = EnergyDebtRules.AvailableEnergyGetter;
+                }
             }
 
-            int energy = player?.PlayerCombatState?.Energy ?? 0;
-            int maxEnergyDebt = ClosureModRelic.GetMaxEnergyDebt(player);
-            bool atDebtLimit = energy <= -maxEnergyDebt;
-
-            if (LayersField.GetValue(__instance) is Control layers)
-            {
-                ApplyLayerVisual(layers, atDebtLimit);
-            }
-
-            if (LabelField.GetValue(__instance) is MegaLabel label)
-            {
-                label.AddThemeColorOverride(FontColorName, atDebtLimit ? DebtLimitFontColor : NormalFontColor);
-                label.AddThemeColorOverride(FontOutlineColorName, OutlineColor);
-            }
-
-            HideNode(RotationLayersField.GetValue(__instance) as CanvasItem);
-            HideNode(BackVfxField.GetValue(__instance) as CanvasItem);
-            HideNode(FrontVfxField.GetValue(__instance) as CanvasItem);
+            yield return instruction;
         }
-        catch (ObjectDisposedException exception)
+
+        if (energyReads != (refreshLabel ? 5 : 1))
         {
-            LogVisualException(exception);
+            throw new InvalidOperationException($"Energy counter patch: unexpected energy reads in {__originalMethod.Name}: {energyReads}.");
         }
-        catch (InvalidOperationException exception)
-        {
-            LogVisualException(exception);
-        }
-    }
-
-    private static void ApplyLayerVisual(Control layers, bool atDebtLimit)
-    {
-        layers.Material = null;
-        layers.SelfModulate = NormalLayerColor;
-        layers.Modulate = NormalLayerColor;
-
-        if (layers.GetNodeOrNull<TextureRect>("Layer1") is { } baseLayer)
-        {
-            Texture2D? texture = GD.Load<Texture2D>(EnergyOrbPath);
-            if (texture is not null)
-            {
-                baseLayer.Texture = texture;
-            }
-
-            baseLayer.Visible = true;
-            baseLayer.Material = null;
-            baseLayer.SelfModulate = atDebtLimit ? DebtLimitLayerColor : NormalLayerColor;
-            baseLayer.Modulate = atDebtLimit ? DebtLimitLayerColor : NormalLayerColor;
-        }
-
-        if (atDebtLimit)
-        {
-            return;
-        }
-
-        ClearCanvasItemVisuals(layers);
-    }
-
-    private static void ClearCanvasItemVisuals(Node node)
-    {
-        if (node is CanvasItem canvasItem)
-        {
-            canvasItem.Material = null;
-            canvasItem.Modulate = NormalLayerColor;
-            canvasItem.SelfModulate = NormalLayerColor;
-        }
-
-        foreach (Node child in node.GetChildren())
-        {
-            ClearCanvasItemVisuals(child);
-        }
-    }
-
-    private static void HideNode(CanvasItem? node)
-    {
-        if (node is null)
-        {
-            return;
-        }
-
-        node.Visible = false;
-        node.Modulate = new Color(1f, 1f, 1f, 0f);
-        switch (node)
-        {
-            case Control control:
-                control.Scale = Vector2.Zero;
-                break;
-            case Node2D node2D:
-                node2D.Scale = Vector2.Zero;
-                break;
-        }
-    }
-
-    private static void LogVisualException(Exception exception)
-    {
-        if (_loggedVisualException)
-        {
-            return;
-        }
-
-        _loggedVisualException = true;
-        Entry.Logger.Info($"Energy counter visual skipped after scene reload: {exception.Message}");
-    }
-}
-
-[HarmonyPatch(typeof(CardModel), nameof(CardModel.SpendResources))]
-internal static class EnergyDebtSpendResourcesPatch
-{
-    private readonly record struct EnergyDebtSpendState(int EnergyBeforeSpend, int EnergyCostToSpend, bool CostsX);
-
-    private static void Prefix(CardModel __instance, out EnergyDebtSpendState __state)
-    {
-        int energyBeforeSpend = __instance.Owner?.PlayerCombatState?.Energy ?? 0;
-        int energyCostToSpend = Math.Max(0, __instance.EnergyCost.GetAmountToSpend());
-        __state = new EnergyDebtSpendState(energyBeforeSpend, energyCostToSpend, __instance.EnergyCost.CostsX);
-    }
-
-    private static async Task<(int, int)> Postfix(
-        Task<(int, int)> __result,
-        CardModel __instance,
-        EnergyDebtSpendState __state)
-    {
-        (int energySpent, int starsSpent) result = await __result;
-        Player? owner = __instance.Owner;
-        var combatState = owner?.PlayerCombatState;
-        if (owner is null || combatState is null || !ClosureModRelic.PlayerHasEnergyDebtRelic(owner))
-        {
-            return result;
-        }
-
-        int energyDebtLimit = -ClosureModRelic.GetMaxEnergyDebt(owner);
-        int targetEnergy = __state.CostsX
-            ? energyDebtLimit
-            : Math.Max(energyDebtLimit, __state.EnergyBeforeSpend - __state.EnergyCostToSpend);
-        if (targetEnergy < combatState.Energy)
-        {
-            combatState.Energy = targetEnergy;
-        }
-
-        if (__state.CostsX)
-        {
-            __instance.EnergyCost.CapturedXValue = Math.Max(0, __state.EnergyBeforeSpend - targetEnergy);
-        }
-
-        return result;
     }
 }

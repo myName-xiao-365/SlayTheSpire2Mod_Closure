@@ -28,7 +28,7 @@ public sealed class Overload : ModCardTemplate
     public override bool ShouldReceiveCombatHooks => true;
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"{Entry.ResPath}/images/cards/RecursiveAlgorithm.png");
+        PortraitPath: $"{Entry.ResPath}/images/cards/Overload.png");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

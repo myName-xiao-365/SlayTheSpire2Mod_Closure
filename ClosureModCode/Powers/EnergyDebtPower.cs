@@ -1,4 +1,3 @@
-using ClosureMod.Keywords;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -14,8 +13,6 @@ public sealed class EnergyDebtPower : ModPowerTemplate
     public override PowerType Type => PowerType.Debuff;
 
     public override PowerStackType StackType => PowerStackType.Counter;
-
-    protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.DebtId];
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"{Entry.ResPath}/images/powers/{GetType().Name}.png",

@@ -1,5 +1,6 @@
 using ArkBase.Api;
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -19,6 +20,8 @@ public sealed class ElitePromotion : ModCardTemplate
     private const CardRarity CardRarityValue = CardRarity.Uncommon;
     private const TargetType CardTarget = TargetType.AnyEnemy;
     private const bool ShowInCardLibrary = true;
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.EliteTwo];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/ElitePromotion.png");
@@ -72,6 +75,6 @@ public sealed class ElitePromotion : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4);
+        DynamicVars.Damage.UpgradeValueBy(9);
     }
 }

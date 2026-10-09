@@ -1,6 +1,6 @@
+using ArkBase.Api;
 using ClosureMod.Characters;
 using ClosureMod.Keywords;
-using ClosureMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -20,7 +20,7 @@ public sealed class OffDuty : ModCardTemplate
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish, ClosureKeywords.Block];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Sluggish, ClosureKeywords.Block, ClosureKeywords.Stun];
     public override bool GainsBlock => true;
 
     public override CardAssetProfile AssetProfile => new(
@@ -39,19 +39,9 @@ public sealed class OffDuty : ModCardTemplate
     {
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
 
-        int currentSluggish = Owner.Creature.Powers
-            .OfType<SluggishPower>()
-            .Sum(power => Math.Max(0, power.Amount));
-        int sluggishToApply = Math.Max(0, SluggishPower.StunThreshold - currentSluggish);
-        if (sluggishToApply <= 0)
-        {
-            return;
-        }
-
-        await PowerCmd.Apply<SluggishPower>(
+        await StatusEffects.Stun(
             choiceContext,
             Owner.Creature,
-            sluggishToApply,
             Owner.Creature,
             this);
     }

@@ -1,9 +1,11 @@
 using ArkBase.Api;
 using ClosureMod.Characters;
 using ClosureMod.Powers;
+using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -55,5 +57,21 @@ public sealed class Bloodfiend : ModCardTemplate
         }
 
         await CardPileCmd.AddGeneratedCardToCombat(generatedCard, PileType.Hand, Owner);
+    }
+}
+
+[HarmonyPatch(typeof(CardModel), nameof(CardModel.Description), MethodType.Getter)]
+internal static class BloodfiendDescriptionPatch
+{
+    private static void Postfix(CardModel __instance, ref LocString __result)
+    {
+        if (__instance is Bloodfiend bloodfiend)
+        {
+            __result = new LocString(
+                "cards",
+                bloodfiend.IsUpgraded
+                    ? "CLOSURE_MOD_CARD_BLOODFIEND.descriptionUpgraded"
+                    : "CLOSURE_MOD_CARD_BLOODFIEND.description");
+        }
     }
 }

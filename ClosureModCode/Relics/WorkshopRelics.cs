@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.RelicPools;
+using MegaCrit.Sts2.Core.Saves.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -25,19 +26,32 @@ public abstract class WorkshopRelic : ModRelicTemplate
 }
 
 [RegisterRelic(typeof(EventRelicPool))]
-public sealed class GaulCheque : WorkshopRelic;
+public sealed class GaulCheque : WorkshopRelic
+{
+    [SavedProperty]
+    public int ShopsVisited { get; set; }
+
+    public override bool ShowCounter => true;
+    public override int DisplayAmount => ShopsVisited;
+
+    public void RecordShopVisit()
+    {
+        ShopsVisited++;
+        InvokeDisplayAmountChanged();
+    }
+}
 
 [RegisterRelic(typeof(EventRelicPool))]
 public sealed class GiftCard : WorkshopRelic
 {
     public override decimal ModifyMerchantPrice(Player player, MerchantEntry entry, decimal price)
     {
-        if (!ReferenceEquals(Owner, player))
+        if (!ReferenceEquals(Owner, player) || entry is not MerchantCardRemovalEntry)
         {
             return price;
         }
 
-        return WorkshopShopDiscounts.GetPrice(entry, price);
+        return price * 0.5m;
     }
 }
 

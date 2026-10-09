@@ -1,5 +1,7 @@
 using ArkBase.Api;
 using ClosureMod.Keywords;
+using ClosureMod.Utils;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -19,7 +21,8 @@ public sealed class MerchantFormPower : ModPowerTemplate, ISluggishDamageOverrid
 
     public override PowerStackType StackType => PowerStackType.Single;
 
-    protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.SluggishId];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        RelatedPowerHoverTips.For<SluggishPower>(this, ClosureKeywords.SluggishId);
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"{Entry.ResPath}/images/powers/MerchantFormPower.png",

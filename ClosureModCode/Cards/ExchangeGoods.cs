@@ -35,9 +35,8 @@ public sealed class ExchangeGoods : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         CardPile? hand = Owner.PlayerCombatState?.Hand;
-        if (hand is null || hand.Cards.Count(card => !ReferenceEquals(card, this) && card.IsTransformable) == 0)
+        if (hand is null || !hand.Cards.Any(CanExchange))
         {
-            IncreasePermanentCost();
             return;
         }
 
@@ -54,40 +53,42 @@ public sealed class ExchangeGoods : ModCardTemplate
             choiceContext,
             Owner,
             selectorPrefs,
-            card => !ReferenceEquals(card, this) && card.IsTransformable,
+            CanExchange,
             this)).FirstOrDefault();
 
-        if (selectedCard is not null)
+        if (selectedCard is null || !CanExchange(selectedCard))
         {
-            CardModel permanentVersion = selectedCard.DeckVersion is { HasBeenRemovedFromState: false } deckVersion
-                ? deckVersion
-                : selectedCard;
-            CardPileAddResult? permanentTransform = await CardCmd.TransformToRandom(
-                permanentVersion,
-                Owner.RunState.Rng.CombatCardGeneration,
-                ReferenceEquals(permanentVersion, selectedCard)
-                    ? CardPreviewStyle.HorizontalLayout
-                    : CardPreviewStyle.None);
+            return;
+        }
 
-            if (permanentTransform is { success: true } result)
+        CardModel permanentVersion = selectedCard.DeckVersion!;
+        CardPileAddResult? permanentTransform = await CardCmd.TransformToRandom(
+            permanentVersion,
+            Owner.RunState.Rng.CombatCardGeneration,
+            CardPreviewStyle.None);
+
+        if (permanentTransform is { success: true } result)
+        {
+            if (IsUpgraded && result.cardAdded.IsUpgradable)
             {
-                if (IsUpgraded && result.cardAdded.IsUpgradable)
-                {
-                    CardCmd.Upgrade(result.cardAdded, CardPreviewStyle.None);
-                }
-
-                if (!ReferenceEquals(permanentVersion, selectedCard))
-                {
-                    // Deck cards must be copied into the combat scope, not cloned as played cards.
-                    CardModel combatReplacement = selectedCard.CombatState!.CloneCard(result.cardAdded);
-                    combatReplacement.DeckVersion = result.cardAdded;
-                    await CardCmd.Transform(selectedCard, combatReplacement, CardPreviewStyle.HorizontalLayout);
-                }
+                CardCmd.Upgrade(result.cardAdded, CardPreviewStyle.None);
             }
+
+            // Deck cards must be copied into the combat scope, not cloned as played cards.
+            CardModel combatReplacement = selectedCard.CombatState!.CloneCard(result.cardAdded);
+            combatReplacement.DeckVersion = result.cardAdded;
+            await CardCmd.Transform(selectedCard, combatReplacement, CardPreviewStyle.HorizontalLayout);
         }
 
         IncreasePermanentCost();
     }
+
+    private bool CanExchange(CardModel card) =>
+        !ReferenceEquals(card, this) && card.IsTransformable &&
+        !card.Keywords.Contains(CardKeyword.Eternal) &&
+        card.DeckVersion is { HasBeenRemovedFromState: false } deckVersion &&
+        !deckVersion.Keywords.Contains(CardKeyword.Eternal) &&
+        Owner.Deck.Cards.Any(deckCard => ReferenceEquals(deckCard, deckVersion));
 
     private void IncreasePermanentCost()
     {

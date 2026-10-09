@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <Net9TargetingPackVersion Condition="'$(Net9TargetingPackVersion)' == ''">9.0.17</Net9TargetingPackVersion>
+  </PropertyGroup>
+  <!-- Pin reference packs independently of the selected SDK's latest patch. -->
+  <Target Name="UsePinnedNet9TargetingPacks" BeforeTargets="ProcessFrameworkReferences">
+    <ItemGroup>
+      <KnownFrameworkReference Update="@(KnownFrameworkReference)"
+                               Condition="'%(KnownFrameworkReference.TargetFramework)' == 'net9.0'">
+        <TargetingPackVersion>$(Net9TargetingPackVersion)</TargetingPackVersion>
+      </KnownFrameworkReference>
+    </ItemGroup>
+  </Target>
+</Project>

@@ -4,5 +4,19 @@
   "CLOSURE_MOD_KEYWORD_ELITE_TWO.title": "Elite Two",
   "CLOSURE_MOD_KEYWORD_ELITE_TWO.description": "Transform a Support card into its Elite Two form while preserving its current upgrade state.",
   "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.title": "Upgrade",
-  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.description": "Turn a card into its upgraded form, strengthening its values or effects."
+  "CLOSURE_MOD_KEYWORD_UPGRADE_ACTION.description": "Turn a card into its upgraded form, strengthening its values or effects.",
+  "CLOSURE_MOD_KEYWORD_ATTACK_MODULE.title": "Attack Module",
+  "CLOSURE_MOD_KEYWORD_ATTACK_MODULE.description": "When you deal damage, deal additional damage equal to the Attack Module's maximum HP.",
+  "CLOSURE_MOD_KEYWORD_DEFENSE_MODULE.title": "Defense Module",
+  "CLOSURE_MOD_KEYWORD_DEFENSE_MODULE.description": "When you gain Block, gain additional Block equal to the Defense Module's maximum HP.",
+  "CLOSURE_MOD_KEYWORD_SUPPORT_MODULE.title": "Support Module",
+  "CLOSURE_MOD_KEYWORD_SUPPORT_MODULE.description": "When you take damage, heal HP equal to the Support Module's maximum HP.",
+  "CLOSURE_MOD_KEYWORD_INHERIT.title": "Inherit",
+  "CLOSURE_MOD_KEYWORD_INHERIT.description": "When automatically played by another X-cost card, use that card's X value to resolve this card without spending additional Energy.",
+  "CLOSURE_MOD_KEYWORD_STUN.title": "Stun",
+  "CLOSURE_MOD_KEYWORD_STUN.description": "Enemies cannot act on their next turn. The player can play only 1 card this turn.",
+  "CLOSURE_MOD_KEYWORD_DAZE.title": "Daze",
+  "CLOSURE_MOD_KEYWORD_DAZE.description": "The player can play only 1 card this turn.",
+  "CLOSURE_MOD_KEYWORD_HAND_RETAIN.title": "Retain",
+  "CLOSURE_MOD_KEYWORD_HAND_RETAIN.description": "Cards in your hand are not discarded at the end of this turn."
 }

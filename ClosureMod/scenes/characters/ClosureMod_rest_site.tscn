@@ -7,13 +7,13 @@
 script = ExtResource("2_controller")
 
 [node name="Visuals" type="Sprite2D" parent="."]
-position = Vector2(0, -96)
-scale = Vector2(1.25, 1.25)
+position = Vector2(0, 190)
+scale = Vector2(1.65, 1.65)
 texture = ExtResource("1_character")
 
 [node name="Shadow" type="Sprite2D" parent="."]
-position = Vector2(75, -58)
-scale = Vector2(0.75, 0.75)
+position = Vector2(75, 228)
+scale = Vector2(0.99, 0.99)
 modulate = Color(0.25, 0.25, 0.25, 0.45)
 texture = ExtResource("1_character")
 
@@ -21,6 +21,7 @@ texture = ExtResource("1_character")
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 0
+position = Vector2(0, 250)
 
 [node name="SelectionReticle" type="Control" parent="ControlRoot"]
 unique_name_in_owner = true

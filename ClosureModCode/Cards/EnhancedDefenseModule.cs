@@ -22,7 +22,8 @@ public sealed class EnhancedDefenseModule : ModCardTemplate
 
     public override bool GainsBlock => true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Block];
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        [CardKeyword.Exhaust, ClosureKeywords.Block, ClosureKeywords.DefenseModule];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/EnhancedDefenseModule.png");

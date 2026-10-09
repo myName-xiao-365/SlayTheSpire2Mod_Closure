@@ -44,6 +44,14 @@ public sealed class ThresholdReduction : ModCardTemplate
             DynamicVars["ThresholdReduction"].BaseValue,
             Owner.Creature,
             this);
+
+        SluggishPower? sluggish = cardPlay.Target.Powers
+            .OfType<SluggishPower>()
+            .FirstOrDefault(power => power.Amount > 0);
+        if (sluggish is not null)
+        {
+            await sluggish.ResolveStunThreshold(choiceContext, Owner.Creature, this);
+        }
     }
 
     protected override void OnUpgrade()

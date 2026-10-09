@@ -46,7 +46,7 @@ public sealed class BigDiscount : ModCardTemplate
 
         CardModel selectedCard = targets[Random.Shared.Next(targets.Count)];
 
-        selectedCard.EnergyCost.SetCustomBaseCost(0);
+        selectedCard.EnergyCost.SetThisCombat(0, reduceOnly: true);
         if (IsUpgraded && selectedCard.IsUpgradable)
         {
             CardCmd.Upgrade(selectedCard, CardPreviewStyle.None);

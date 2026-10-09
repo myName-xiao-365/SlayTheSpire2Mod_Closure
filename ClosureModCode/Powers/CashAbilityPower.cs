@@ -29,12 +29,13 @@ public sealed class CashAbilityPower : ModPowerTemplate
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (!ReferenceEquals(Owner, player.Creature) || Amount <= 0 ||
-            player.PlayerCombatState is not { } combatState)
+            player.PlayerCombatState is not { } combatState ||
+            Owner.CombatState is not { } cardScope)
         {
             return;
         }
 
-        List<CardModel> hand = combatState.Hand.Cards.ToList();
+        List<CardModel> hand = combatState.Hand.Cards.Where(card => card.IsTransformable).ToList();
         List<CardModel> supportCards = SupportCards.GetCards(CardRarity.Common).ToList();
         if (hand.Count == 0 || supportCards.Count == 0)
         {
@@ -55,7 +56,7 @@ public sealed class CashAbilityPower : ModPowerTemplate
             choiceContext,
             player,
             selectorPrefs,
-            _ => true,
+            card => card.IsTransformable,
             this)).ToList();
         if (selectedCards.Count == 0)
         {
@@ -63,8 +64,19 @@ public sealed class CashAbilityPower : ModPowerTemplate
         }
 
         Flash();
+        // Support cards intentionally opt out of vanilla random generation. Choose
+        // the explicit replacements here without changing their reward eligibility.
+        var transformations = new List<CardTransformation>();
+        foreach (CardModel card in selectedCards)
+        {
+            CardModel replacement = cardScope.CreateCard(
+                supportCards[player.RunState.Rng.CombatCardGeneration.NextInt(supportCards.Count)],
+                player);
+            transformations.Add(new CardTransformation(card, replacement));
+        }
+
         IEnumerable<CardPileAddResult> transformedCards = await CardCmd.Transform(
-            selectedCards.Select(card => new CardTransformation(card, supportCards)),
+            transformations,
             player.RunState.Rng.CombatCardGeneration,
             CardPreviewStyle.HorizontalLayout);
 

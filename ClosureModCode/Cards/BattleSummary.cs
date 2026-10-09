@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -27,24 +28,29 @@ public sealed class BattleSummary : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(5, ValueProp.Move),
-        new DynamicVar("DamagePerSupport", 5)
+        new DynamicVar("DamagePerSupport", 5),
+        ModCardVars.ComputedDamage("TotalDamage", 5,
+            card => card is BattleSummary summary ? summary.CalculateDamage() : 5, ValueProp.Move)
     ];
 
     public BattleSummary() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
+    private decimal CalculateDamage()
+    {
+        int exhaustedSupportCount = (IsMutable ? Owner?.PlayerCombatState : null)?.ExhaustPile.Cards
+            .OfType<SupportCardTemplate>()
+            .Count() ?? 0;
+        return DynamicVars.Damage.BaseValue +
+               exhaustedSupportCount * DynamicVars["DamagePerSupport"].BaseValue;
+    }
+
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        int exhaustedSupportCount = Owner.PlayerCombatState?.ExhaustPile.Cards
-            .OfType<SupportCardTemplate>()
-            .Count() ?? 0;
-        decimal totalDamage = DynamicVars.Damage.BaseValue +
-                              exhaustedSupportCount * DynamicVars["DamagePerSupport"].BaseValue;
-
-        await DamageCmd.Attack(totalDamage)
+        await DamageCmd.Attack(CalculateDamage())
             .FromCard(this)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
@@ -54,5 +60,6 @@ public sealed class BattleSummary : ModCardTemplate
     {
         DynamicVars.Damage.UpgradeValueBy(1);
         DynamicVars["DamagePerSupport"].UpgradeValueBy(1);
+        DynamicVars["TotalDamage"].UpgradeValueBy(1);
     }
 }

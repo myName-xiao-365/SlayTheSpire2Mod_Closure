@@ -38,8 +38,8 @@ public sealed partial class ClosureModCharacter : ModCharacterTemplate<ClosureMo
     public override CharacterGender Gender => CharacterGender.Neutral;
 
     // 初始血量和金币。
-    public override int StartingHp => 70;
-    public override int StartingGold => 99;
+    public override int StartingHp => 72;
+    public override int StartingGold => 142;
 
     public override CharacterAssetProfile AssetProfile => new(
         Scenes: new CharacterSceneAssetSet(

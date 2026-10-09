@@ -1,4 +1,5 @@
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
@@ -20,6 +21,8 @@ public sealed class TimelyStop : ModCardTemplate
     private const CardRarity CardRarityValue = CardRarity.Uncommon;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.HandRetain];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/TimelyStop.png");
@@ -46,7 +49,7 @@ public sealed class TimelyStop : ModCardTemplate
 
         if (IsUpgraded)
         {
-            await PowerCmd.Apply<TimelyStopNextTurnDrawPower>(
+            await PowerCmd.Apply<DrawCardsNextTurnPower>(
                 choiceContext,
                 Owner.Creature,
                 1,

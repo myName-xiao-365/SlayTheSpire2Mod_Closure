@@ -24,6 +24,9 @@ public sealed class PredictiveInterception : ModCardTemplate
 
     public override bool GainsBlock => true;
 
+    protected override bool ShouldGlowGoldInternal =>
+        CombatState?.Enemies.Any(enemy => enemy.IsAlive && enemy.Monster?.IntendsToAttack == true) == true;
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/{GetType().Name}.png");
 

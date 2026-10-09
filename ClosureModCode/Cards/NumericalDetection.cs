@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -29,25 +30,30 @@ public sealed class NumericalDetection : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(36, ValueProp.Move),
-        new DynamicVar("DamagePerSluggish", 5)
+        new DynamicVar("DamagePerSluggish", 5),
+        ModCardVars.ComputedDamage("TotalDamage", 36,
+            (card, target) => card is NumericalDetection detection ? detection.CalculateDamage(target) : 36, ValueProp.Move)
     ];
 
     public NumericalDetection() : base(BaseEnergyCost, CardKind, CardRarityValue, CardTarget, ShowInCardLibrary)
     {
     }
 
+    private decimal CalculateDamage(Creature? target)
+    {
+        decimal sluggishStacks = target?.Powers
+            .OfType<SluggishPower>()
+            .Where(power => power.Amount > 0)
+            .Sum(power => power.Amount) ?? 0;
+        return DynamicVars.Damage.BaseValue +
+               sluggishStacks * DynamicVars["DamagePerSluggish"].BaseValue;
+    }
+
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        decimal sluggishStacks = cardPlay.Target.Powers
-            .OfType<SluggishPower>()
-            .Where(power => power.Amount > 0)
-            .Sum(power => power.Amount);
-        decimal totalDamage = DynamicVars.Damage.BaseValue +
-                              sluggishStacks * DynamicVars["DamagePerSluggish"].BaseValue;
-
-        await DamageCmd.Attack(totalDamage)
+        await DamageCmd.Attack(CalculateDamage(cardPlay.Target))
             .FromCard(this)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
@@ -56,5 +62,6 @@ public sealed class NumericalDetection : ModCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(6);
+        DynamicVars["TotalDamage"].UpgradeValueBy(6);
     }
 }

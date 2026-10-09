@@ -30,8 +30,9 @@ public sealed class FirstStep : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var hand = Owner.PlayerCombatState?.Hand;
-        if (hand is null || !hand.Cards.Any(card => card.Rarity == CardRarity.Common && SupportCards.CanPromote(card)))
+        var combatState = Owner.PlayerCombatState;
+        if (combatState is null ||
+            !combatState.Hand.Cards.Any(card => card.Rarity == CardRarity.Common && SupportCards.CanPromote(card)))
         {
             return;
         }
@@ -67,7 +68,7 @@ public sealed class FirstStep : ModCardTemplate
             return;
         }
 
-        pendingPromotion.AddCard(selectedCard, IsUpgraded);
+        pendingPromotion.AddCard(selectedCard, combatState, IsUpgraded);
         await CardPileCmd.Add(selectedCard, PileType.Exhaust, CardPilePosition.Top, this, false);
     }
 

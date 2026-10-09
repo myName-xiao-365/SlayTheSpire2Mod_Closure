@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using ClosureMod.Cards;
-using ClosureMod.Relics;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -123,40 +122,12 @@ internal static class AdditionalOrderHasLocalModifierPatch
 [HarmonyPatch(typeof(CardModel), nameof(CardModel.SpendResources))]
 internal static class TurnEnergySpendTrackerPatch
 {
-    private readonly record struct SpendState(int EnergyBeforeSpend, int EnergyCostToSpend, bool CostsX);
-
-    private static void Prefix(CardModel __instance, out SpendState __state)
-    {
-        int energyBeforeSpend = __instance.Owner?.PlayerCombatState?.Energy ?? 0;
-        int energyCostToSpend = Math.Max(0, __instance.EnergyCost.GetAmountToSpend());
-        __state = new SpendState(energyBeforeSpend, energyCostToSpend, __instance.EnergyCost.CostsX);
-    }
-
     private static async Task<(int, int)> Postfix(
         Task<(int, int)> __result,
-        CardModel __instance,
-        SpendState __state)
+        CardModel __instance)
     {
         (int energySpent, int starsSpent) result = await __result;
-        Player? owner = __instance.Owner;
-        int spent = ResolveEnergySpent(owner, __state, result.energySpent);
-        TurnEnergySpendTracker.RecordSpent(owner, spent);
+        TurnEnergySpendTracker.RecordSpent(__instance.Owner, result.energySpent);
         return result;
-    }
-
-    private static int ResolveEnergySpent(Player? owner, SpendState state, int vanillaEnergySpent)
-    {
-        if (!state.CostsX)
-        {
-            return state.EnergyCostToSpend;
-        }
-
-        if (owner is null || !ClosureModRelic.PlayerHasEnergyDebtRelic(owner))
-        {
-            return Math.Max(0, vanillaEnergySpent);
-        }
-
-        int targetEnergy = -ClosureModRelic.GetMaxEnergyDebt(owner);
-        return Math.Max(0, state.EnergyBeforeSpend - targetEnergy);
     }
 }

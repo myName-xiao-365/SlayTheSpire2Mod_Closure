@@ -169,6 +169,8 @@ internal static class XCardTransferredXValuePatch
         TransferredCards.Add(card, new object());
     }
 
+    internal static bool IsMarked(CardModel card) => TransferredCards.TryGetValue(card, out _);
+
     private static bool Prefix(CardModel __instance, ref int __result)
     {
         if (!TransferredCards.TryGetValue(__instance, out _))

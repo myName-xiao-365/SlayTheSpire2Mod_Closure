@@ -25,7 +25,7 @@ public sealed class TimelyRescue : ModCardTemplate
 
     public override bool GainsBlock => true;
     public override bool ShouldReceiveCombatHooks => true;
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Block];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Block, ClosureKeywords.Stun, ClosureKeywords.Daze];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/TimelyRescue.png");

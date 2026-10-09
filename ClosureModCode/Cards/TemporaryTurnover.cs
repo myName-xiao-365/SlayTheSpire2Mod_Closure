@@ -19,7 +19,9 @@ public sealed class TemporaryTurnover : ModCardTemplate
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.Debt];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => IsUpgraded
+        ? [ClosureKeywords.Debt]
+        : [ClosureKeywords.Debt, CardKeyword.Exhaust];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/DebtFinancing.jpg");
@@ -27,7 +29,6 @@ public sealed class TemporaryTurnover : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DynamicVar("EnergyGain", 1),
-        new DynamicVar("Draw", 1),
         new DynamicVar("Debt", 1)
     ];
 
@@ -38,7 +39,6 @@ public sealed class TemporaryTurnover : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await PlayerCmd.GainEnergy((int)DynamicVars["EnergyGain"].BaseValue, Owner);
-        await CardPileCmd.Draw(choiceContext, (int)DynamicVars["Draw"].BaseValue, Owner);
         await PowerCmd.Apply<EnergyDebtPower>(
             choiceContext,
             Owner.Creature,
@@ -49,6 +49,6 @@ public sealed class TemporaryTurnover : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Draw"].UpgradeValueBy(1);
+        RemoveKeyword(CardKeyword.Exhaust);
     }
 }

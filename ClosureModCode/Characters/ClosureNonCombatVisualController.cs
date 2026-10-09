@@ -1,6 +1,7 @@
 using Godot;
 using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Nodes.RestSite;
 
 namespace ClosureMod.Characters;
 
@@ -12,6 +13,7 @@ public partial class ClosureNonCombatVisualController : Node2D
     private const string CombatAtlasPath = $"{ModelRoot}/char_4228_closur.atlas";
     private const string CombatSkeletonPath = $"{ModelRoot}/char_4228_closur_4.2.43.skel";
     private const float ModelScale = 0.6f;
+    private const float RestSiteModelScale = 0.825f;
 
     public override void _Ready()
     {
@@ -63,7 +65,8 @@ public partial class ClosureNonCombatVisualController : Node2D
             Node2D spineBody = (Node2D)ClassDB.Instantiate("SpineSprite").AsGodotObject();
             spineBody.Name = "SpineIdleVisuals";
             spineBody.Position = fallback?.Position ?? new Vector2(0f, -96f);
-            spineBody.Scale = new Vector2(ModelScale, ModelScale);
+            float scale = root is NRestSiteCharacter ? RestSiteModelScale : ModelScale;
+            spineBody.Scale = new Vector2(scale, scale);
             spineBody.Call("set_skeleton_data_res", skeletonData);
 
             Node parent = fallback?.GetParent() ?? root;

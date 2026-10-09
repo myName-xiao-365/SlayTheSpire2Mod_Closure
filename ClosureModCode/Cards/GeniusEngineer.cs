@@ -1,4 +1,5 @@
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using ClosureMod.Powers;
 using ClosureMod.Summons;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -17,6 +18,8 @@ public sealed class GeniusEngineer : ModCardTemplate
     private const CardRarity CardRarityValue = CardRarity.Rare;
     private const TargetType CardTarget = TargetType.Self;
     private const bool ShowInCardLibrary = true;
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [ClosureKeywords.AttackModule];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/GeniusEngineer.jpg");

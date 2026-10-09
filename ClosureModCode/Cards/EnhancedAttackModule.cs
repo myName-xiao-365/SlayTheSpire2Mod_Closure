@@ -1,4 +1,5 @@
 using ClosureMod.Characters;
+using ClosureMod.Keywords;
 using ClosureMod.Summons;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -19,7 +20,7 @@ public sealed class EnhancedAttackModule : ModCardTemplate
     private const TargetType CardTarget = TargetType.RandomEnemy;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.AttackModule];
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"{Entry.ResPath}/images/cards/EnhancedAttackModule.png");

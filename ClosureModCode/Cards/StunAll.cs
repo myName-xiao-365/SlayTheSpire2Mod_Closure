@@ -18,7 +18,7 @@ public sealed class StunAll : ModCardTemplate
     private const TargetType CardTarget = TargetType.AllEnemies;
     private const bool ShowInCardLibrary = true;
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, ClosureKeywords.Stun, ClosureKeywords.Sluggish];
 
     public override CardAssetProfile AssetProfile => new(
         // Temporary shared art until a dedicated portrait is provided.

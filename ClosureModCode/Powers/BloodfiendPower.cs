@@ -19,8 +19,8 @@ public sealed class BloodfiendPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: $"{Entry.ResPath}/images/cards/Bloodfiend.jpg",
-        BigIconPath: $"{Entry.ResPath}/images/cards/Bloodfiend.jpg");
+        IconPath: $"{Entry.ResPath}/images/powers/BloodfiendPower.png",
+        BigIconPath: $"{Entry.ResPath}/images/powers/BloodfiendPower.png");
 
     public override Task BeforeHandDraw(Player player, PlayerChoiceContext choiceContext, ICombatState combatState)
     {

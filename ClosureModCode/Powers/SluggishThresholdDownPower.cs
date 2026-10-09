@@ -1,5 +1,7 @@
 using ArkBase.Api;
 using ClosureMod.Keywords;
+using ClosureMod.Utils;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -14,12 +16,15 @@ namespace ClosureMod.Powers;
 [RegisterPower]
 public sealed class SluggishThresholdDownPower : ModPowerTemplate, ISluggishThresholdModifier
 {
-    public int SluggishThresholdReduction => Math.Max(0, Amount);
+    public const int MaxStacks = 9;
+
+    public int SluggishThresholdReduction => Math.Clamp(Amount, 0, MaxStacks);
     public override PowerType Type => PowerType.Debuff;
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override IEnumerable<string> RegisteredKeywordIds => [ClosureKeywords.SluggishId];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        RelatedPowerHoverTips.For<SluggishPower>(this, ClosureKeywords.SluggishId);
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"{Entry.ResPath}/images/powers/SluggishThresholdDownPower.png",

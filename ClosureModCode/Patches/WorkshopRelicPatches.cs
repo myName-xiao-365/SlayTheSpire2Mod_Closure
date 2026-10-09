@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Reflection;
 using ClosureMod.Relics;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
@@ -41,84 +42,192 @@ internal static class GaulChequeShopCreditPatch
 [HarmonyPatch(typeof(MerchantInventory), nameof(MerchantInventory.CreateForNormalMerchant))]
 internal static class WorkshopShopDiscounts
 {
-    private sealed class DiscountState
+    private sealed class GaulDiscountState
     {
-        public bool ExtraSale { get; init; }
-        public bool SpecialOffer { get; init; }
+        public int Percent { get; init; }
     }
 
-    private static readonly ConditionalWeakTable<MerchantEntry, DiscountState> Discounts = new();
+    private static readonly ConditionalWeakTable<MerchantEntry, GaulDiscountState> GaulDiscounts = new();
+    private static readonly FieldInfo BaseCostField = AccessTools.Field(typeof(MerchantEntry), "_cost");
 
-    public static decimal GetPrice(MerchantEntry entry, decimal price)
+    public static bool TryGetGaulDiscount(MerchantEntry entry, out int percent)
     {
-        if (!Discounts.TryGetValue(entry, out DiscountState? discount))
+        if (GaulDiscounts.TryGetValue(entry, out GaulDiscountState? discount))
         {
-            return price;
+            percent = discount.Percent;
+            return true;
         }
 
-        if (discount.SpecialOffer)
-        {
-            return price;
-        }
-
-        return discount.ExtraSale && entry is not MerchantCardEntry ? price * 0.5m : price;
+        percent = 0;
+        return false;
     }
 
-    public static bool IsSpecialOffer(MerchantEntry entry)
-    {
-        return Discounts.TryGetValue(entry, out DiscountState? discount) && discount.SpecialOffer;
-    }
+    public static void ClearGaulDiscount(MerchantEntry entry) => GaulDiscounts.Remove(entry);
 
     private static void Postfix(MerchantInventory __result, Player player)
     {
-        if (!player.Relics.Any(relic => relic is GiftCard))
+        if (player.Relics.Any(relic => relic is GiftCard))
+        {
+            GiftCardShopRefresh.Subscribe(__result, player);
+        }
+
+        GaulCheque? cheque = player.Relics.OfType<GaulCheque>().FirstOrDefault();
+        if (cheque is null)
         {
             return;
         }
 
+        int chancePercent = Math.Min(100, 20 + 10 * Math.Min(8, cheque.ShopsVisited));
+        int normalDiscountPercent = Math.Min(90, 20 + 10 * Math.Min(7, cheque.ShopsVisited));
         var rng = player.PlayerRng.Shops;
         foreach (MerchantEntry entry in __result.AllEntries)
         {
-            if (entry is MerchantCardRemovalEntry)
+            if (entry is MerchantCardEntry { IsOnSale: true } ||
+                entry.Cost < (int)BaseCostField.GetValue(entry)!)
             {
                 continue;
             }
 
-            bool extraSale = rng.NextFloat(1f) < 0.35f;
-            if (entry is MerchantCardEntry card && extraSale && !card.IsOnSale)
-            {
-                card.SetOnSale();
-            }
-
-            bool discounted = extraSale || entry is MerchantCardEntry { IsOnSale: true };
-            if (!discounted)
+            if (rng.NextInt(100) >= chancePercent)
             {
                 continue;
             }
 
-            Discounts.Add(entry, new DiscountState
+            GaulDiscounts.Add(entry, new GaulDiscountState
             {
-                ExtraSale = extraSale,
-                SpecialOffer = rng.NextFloat(1f) < 0.02f
+                Percent = rng.NextInt(100) < 2 ? 99 : normalDiscountPercent
             });
-
         }
+
+        cheque.RecordShopVisit();
     }
 }
 
-[HarmonyPatch(typeof(MerchantEntry), "get_Cost")]
-internal static class WorkshopSpecialOfferPricePatch
+internal static class GiftCardShopRefresh
 {
-    private static void Postfix(MerchantEntry __instance, Player ____player, int ____cost, ref int __result)
+    private sealed class RefreshState
     {
-        if (!____player.Relics.Any(relic => relic is GiftCard) ||
-            !WorkshopShopDiscounts.IsSpecialOffer(__instance))
+        public bool Used;
+    }
+
+    private sealed class RefreshedStock
+    {
+        public required object Item { get; init; }
+        public bool Free { get; init; }
+    }
+
+    private static readonly ConditionalWeakTable<MerchantInventory, RefreshState> Refreshes = new();
+    private static readonly ConditionalWeakTable<MerchantEntry, RefreshedStock> RefreshedPrices = new();
+    private static readonly MethodInfo CardRestock = AccessTools.Method(typeof(MerchantCardEntry), "RestockAfterPurchase");
+    private static readonly MethodInfo RelicRestock = AccessTools.Method(typeof(MerchantRelicEntry), "RestockAfterPurchase");
+    private static readonly MethodInfo PotionRestock = AccessTools.Method(typeof(MerchantPotionEntry), "RestockAfterPurchase");
+
+    public static void Subscribe(MerchantInventory inventory, Player player)
+    {
+        if (inventory.CardRemovalEntry is not { } removal || Refreshes.TryGetValue(inventory, out _))
         {
             return;
         }
 
-        decimal original = __instance is MerchantCardEntry ? ____cost * 2m : ____cost;
-        __result = Math.Max(1, (int)Math.Round(original * 0.01m, MidpointRounding.AwayFromZero));
+        var state = new RefreshState();
+        Refreshes.Add(inventory, state);
+        removal.PurchaseCompleted += (status, _) =>
+        {
+            if (status != PurchaseStatus.Success || state.Used ||
+                !player.Relics.Any(relic => relic is GiftCard))
+            {
+                return;
+            }
+
+            state.Used = true;
+            Refresh(inventory, player);
+        };
+    }
+
+    public static bool TryGetRefreshedPrice(MerchantEntry entry, out bool free)
+    {
+        if (RefreshedPrices.TryGetValue(entry, out RefreshedStock? stock) &&
+            ReferenceEquals(stock.Item, GetStockItem(entry)))
+        {
+            free = stock.Free;
+            return true;
+        }
+
+        free = false;
+        return false;
+    }
+
+    private static void Refresh(MerchantInventory inventory, Player player)
+    {
+        MerchantEntry[] merchandise = inventory.CardEntries.Cast<MerchantEntry>()
+            .Concat(inventory.RelicEntries)
+            .Concat(inventory.PotionEntries)
+            .ToArray();
+
+        foreach (MerchantEntry entry in merchandise)
+        {
+            WorkshopShopDiscounts.ClearGaulDiscount(entry);
+            MethodInfo restock = entry switch
+            {
+                MerchantCardEntry => CardRestock,
+                MerchantRelicEntry => RelicRestock,
+                MerchantPotionEntry => PotionRestock,
+                _ => throw new InvalidOperationException($"Unsupported merchant entry: {entry.GetType().Name}")
+            };
+            restock.Invoke(entry, [inventory]);
+        }
+
+        MerchantCardEntry[] characterCards = inventory.CharacterCardEntries
+            .Where(card => card.CreationResult is not null)
+            .ToArray();
+        MerchantCardEntry? freeCard = characterCards.Length > 0
+            ? characterCards[player.PlayerRng.Shops.NextInt(characterCards.Length)]
+            : null;
+
+        foreach (MerchantEntry entry in merchandise)
+        {
+            RefreshedPrices.Remove(entry);
+            if (GetStockItem(entry) is { } item)
+            {
+                RefreshedPrices.Add(entry, new RefreshedStock
+                {
+                    Item = item,
+                    Free = ReferenceEquals(entry, freeCard)
+                });
+            }
+        }
+
+        inventory.UpdateEntries(PurchaseStatus.Success, inventory.CardRemovalEntry!);
+    }
+
+    private static object? GetStockItem(MerchantEntry entry) => entry switch
+    {
+        MerchantCardEntry card => card.CreationResult,
+        MerchantRelicEntry relic => relic.Model,
+        MerchantPotionEntry potion => potion.Model,
+        _ => null
+    };
+}
+
+[HarmonyPatch(typeof(MerchantEntry), "get_Cost")]
+internal static class WorkshopDiscountPricePatch
+{
+    private static void Postfix(MerchantEntry __instance, Player ____player, ref int __result)
+    {
+        if (____player.Relics.Any(relic => relic is GiftCard) &&
+            GiftCardShopRefresh.TryGetRefreshedPrice(__instance, out bool free))
+        {
+            __result = free ? 0 : Math.Max(1, (int)Math.Round(__result * 0.8m,
+                MidpointRounding.AwayFromZero));
+            return;
+        }
+
+        if (____player.Relics.Any(relic => relic is GaulCheque) &&
+            WorkshopShopDiscounts.TryGetGaulDiscount(__instance, out int percent))
+        {
+            __result = Math.Max(1, (int)Math.Round(__result * (100m - percent) / 100m,
+                MidpointRounding.AwayFromZero));
+        }
     }
 }
 
